@@ -1,0 +1,196 @@
+{
+  "company": "Shell",
+  "url": "https://www.shell.com/sustainability",
+  "analysis_id": "preloaded-shell-v1",
+  "timestamp": "2026-05-25T10:00:00Z",
+  "is_preloaded": true,
+  "rdi_score": 84,
+  "rdi_components": {
+    "geographic_drift": { "score": 79, "weight": 0.30, "weighted": 23.7 },
+    "claim_evidence":   { "score": 91, "weight": 0.35, "weighted": 31.85 },
+    "temporal_drift":   { "score": 62, "weight": 0.20, "weighted": 12.4 },
+    "disclosure_gap":   { "score": 100, "weight": 0.15, "weighted": 15.0 }
+  },
+  "regional_pages": {
+    "US": {
+      "region": "US",
+      "url": "https://www.shell.com/sustainability",
+      "raw_text_hash": "a3f9c2e1d8b74f6a",
+      "claims": [
+        "Reducing net carbon intensity by 30% by 2035",
+        "Net zero emissions by 2050",
+        "Powering Progress: energy access for 1.4 billion people",
+        "$2–3 billion annual investment in low-carbon energy",
+        "100% renewable electricity for own operations by 2030"
+      ],
+      "tone": "aspirational",
+      "word_count": 2840
+    },
+    "DE": {
+      "region": "DE",
+      "url": "https://www.shell.com/de_de/nachhaltige-entwicklung",
+      "raw_text_hash": "b7c2a4f9e1d83b21",
+      "claims": [
+        "Emissionsreduktion gemäß EU-Taxonomie-Anforderungen",
+        "Shell unterstützt den European Green Deal",
+        "Verpflichtungen zur CO2-Reduktion vorbehaltlich regulatorischer Bedingungen",
+        "Intermediäre Ziele für 2035 unterliegen Marktentwicklung",
+        "Berichterstattung nach CSRD-Standards ab 2025"
+      ],
+      "tone": "regulatory",
+      "word_count": 2610
+    },
+    "IN": {
+      "region": "IN",
+      "url": "https://www.shell.com/in/sustainability",
+      "raw_text_hash": "c1d4e7f2a9b38c45",
+      "claims": [
+        "Partnering with India's clean energy mission",
+        "Supporting India's 500GW renewable energy target",
+        "Energy access for growing economies",
+        "LNG as a bridge fuel for industrial decarbonization",
+        "Investing in biofuels in partnership with Indian companies"
+      ],
+      "tone": "partnership",
+      "word_count": 1980
+    },
+    "BR": {
+      "region": "BR",
+      "url": "https://www.shell.com/pt_br/sustentabilidade",
+      "raw_text_hash": "d5e6c3b1a2f47d89",
+      "claims": [
+        "Investindo em biocombustíveis sustentáveis no Brasil",
+        "Parceria com Raízen para etanol de segunda geração",
+        "Compromisso com o futuro sustentável do Brasil",
+        "Apoio à transição energética brasileira",
+        "Geração de empregos na economia verde"
+      ],
+      "tone": "partnership",
+      "word_count": 1870
+    },
+    "SG": {
+      "region": "SG",
+      "url": "https://www.shell.com/sg/sustainability",
+      "raw_text_hash": "e8f0d2c9b4a16e73",
+      "claims": [
+        "Supporting Singapore's Green Plan 2030",
+        "LNG as Asia Pacific transition fuel",
+        "Carbon capture and storage investment in Southeast Asia",
+        "Collaboration with EDB on low-carbon hub",
+        "Net zero ambition aligned with Singapore's climate commitments"
+      ],
+      "tone": "transition",
+      "word_count": 2120
+    }
+  },
+  "contradictions": [
+    {
+      "claim": "Reducing net carbon intensity by 30% by 2035",
+      "evidence_source": "SEC 20-F 2023, p.52",
+      "evidence_text": "Shell targets a 20% net carbon intensity reduction by 2035, subject to prevailing market conditions and the regulatory environment. This target may be revised if material changes to the business environment occur.",
+      "contradiction_type": "quantitative_delta",
+      "severity": "high",
+      "region_source": "US"
+    },
+    {
+      "claim": "Net zero emissions by 2050",
+      "evidence_source": "SEC 20-F 2023, p.47",
+      "evidence_text": "The Company's ability to achieve net zero emissions by 2050 or earlier is contingent upon significant technological advances not yet commercially available and supportive policy frameworks that cannot be assured.",
+      "contradiction_type": "tone_reversal",
+      "severity": "high",
+      "region_source": "US"
+    },
+    {
+      "claim": "Powering Progress: energy access for 1.4 billion people",
+      "evidence_source": "Reuters, March 12 2024",
+      "evidence_text": "Shell cuts renewable energy investment by 20% citing poor returns, redirecting capital to oil and gas production",
+      "contradiction_type": "omission",
+      "severity": "high",
+      "region_source": "US"
+    },
+    {
+      "claim": "$2–3 billion annual investment in low-carbon energy",
+      "evidence_source": "Shell Annual Report 2023",
+      "evidence_text": "Capital expenditure on renewables and energy solutions: $1.5 billion (2023), down from $2.1 billion (2022). Oil and gas capex increased to $20.4 billion.",
+      "contradiction_type": "quantitative_delta",
+      "severity": "medium",
+      "region_source": "US"
+    },
+    {
+      "claim": "Intermediäre Ziele für 2035 unterliegen Marktentwicklung",
+      "evidence_source": "Shell DE Page vs Shell US Page",
+      "evidence_text": "US page states binding 30% reduction; DE page qualifies all targets as subject to market conditions — explicit hedge absent from US consumer-facing page",
+      "contradiction_type": "omission",
+      "severity": "high",
+      "region_source": "DE"
+    }
+  ],
+  "sec_filing": {
+    "filing_type": "20-F",
+    "filing_date": "2024-03-15",
+    "public_claim": "Reducing emissions 30% by 2030",
+    "sec_language": "Targeting 20% net carbon intensity reduction subject to prevailing market conditions and the regulatory environment. This target may be revised.",
+    "delta_description": "10 percentage point discrepancy between public marketing claims (30%) and SEC regulatory filing (20%). Filing includes material uncertainty clause absent from all public messaging.",
+    "delta_numeric": 10.0,
+    "discrepancy_severity": "high",
+    "filing_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001737927&type=20-F"
+  },
+  "news_violations": [
+    {
+      "headline": "Shell loses Dutch court case ordering 45% emissions cut by 2030",
+      "source": "Reuters",
+      "date": "2021-05-26",
+      "region": "DE",
+      "url": "https://www.reuters.com/business/environment/shell-ordered-cut-emissions-dutch-court-ruling-2021-05-26/",
+      "summary": "Hague district court ordered Shell to cut CO2 emissions by 45% by end of 2030 compared with 2019 levels — more aggressive than company's own targets"
+    },
+    {
+      "headline": "UK advertising watchdog bans Shell ads for misleading green claims",
+      "source": "The Guardian",
+      "date": "2023-11-01",
+      "region": "US",
+      "url": "https://www.theguardian.com/business/2023/nov/01/shell-ads-banned-uk-misleading-green-claims",
+      "summary": "ASA ruled Shell's 'Drive Carbon Neutral' and similar ads were misleading because they omitted the majority of Shell's products are fossil fuels"
+    },
+    {
+      "headline": "Shell ordered to pay €17.3m for breaching Dutch emissions requirements",
+      "source": "Financial Times",
+      "date": "2024-02-14",
+      "region": "DE",
+      "url": "https://ft.com/content/shell-emissions-fine",
+      "summary": "Dutch authorities levied fine for failure to comply with binding emissions reduction orders from 2021 court ruling"
+    }
+  ],
+  "glassdoor_signals": {
+    "avg_rating": 3.4,
+    "total_reviews_sampled": 20,
+    "esg_mention_count": 9,
+    "negative_esg_ratio": 0.56,
+    "sample_reviews": [
+      "They talk about sustainability in all-hands meetings and press releases, but we're told internally not to slow down production targets.",
+      "The green messaging is primarily a marketing exercise. Real operational decisions prioritize margins.",
+      "Senior leadership openly says ESG commitments are for investor relations, not actual policy.",
+      "Sustainability team has tiny budget vs communications team. That tells you everything."
+    ]
+  },
+  "drift_dna": {
+    "regulatory_language_pct": 78,
+    "commitment_specificity_pct": 28,
+    "omission_pattern_pct": 62,
+    "tone_variation_pct": 71,
+    "dominant_drift_type": "Regulatory Arbitrage"
+  },
+  "temporal_history": [
+    { "timestamp": "2026-03-01T00:00:00Z", "rdi_score": 72, "analysis_id": "preloaded-shell-v0-mar" },
+    { "timestamp": "2026-04-01T00:00:00Z", "rdi_score": 76, "analysis_id": "preloaded-shell-v0-apr" },
+    { "timestamp": "2026-05-01T00:00:00Z", "rdi_score": 80, "analysis_id": "preloaded-shell-v0-may" },
+    { "timestamp": "2026-05-25T10:00:00Z", "rdi_score": 84, "analysis_id": "preloaded-shell-v1" }
+  ],
+  "bright_data_usage": {
+    "residential_proxies": { "regions_fetched": 5, "product": "Residential Proxies", "requests": 5 },
+    "web_unlocker": { "pages_unlocked": 2, "product": "Web Unlocker", "target": "JS-rendered ESG report pages" },
+    "serp_api": { "queries_run": 2, "product": "SERP API", "targets": ["SEC 20-F search", "violations news"] },
+    "scraping_browser": { "sessions": 1, "product": "Scraping Browser", "target": "Glassdoor reviews" },
+    "web_scraper_api": { "datasets": 1, "product": "Web Scraper API", "target": "Structured SEC filing data" }
+  }
+}

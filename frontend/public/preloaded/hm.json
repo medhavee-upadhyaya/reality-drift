@@ -1,0 +1,193 @@
+{
+  "company": "H&M",
+  "url": "https://hmgroup.com/sustainability/",
+  "analysis_id": "preloaded-hm-v1",
+  "timestamp": "2026-05-25T10:00:00Z",
+  "is_preloaded": true,
+  "rdi_score": 78,
+  "rdi_components": {
+    "geographic_drift": { "score": 61, "weight": 0.30, "weighted": 18.3 },
+    "claim_evidence":   { "score": 95, "weight": 0.35, "weighted": 33.25 },
+    "temporal_drift":   { "score": 58, "weight": 0.20, "weighted": 11.6 },
+    "disclosure_gap":   { "score": 99, "weight": 0.15, "weighted": 14.85 }
+  },
+  "regional_pages": {
+    "US": {
+      "region": "US",
+      "url": "https://hmgroup.com/sustainability/",
+      "raw_text_hash": "e6f7a8b9c0d12345",
+      "claims": [
+        "Climate Positive by 2040",
+        "100% sustainably sourced materials by 2030",
+        "Conscious Choice: verified sustainable product lines",
+        "Fair wages for all garment workers in supply chain",
+        "H&M Foundation supporting circular fashion innovation"
+      ],
+      "tone": "aspirational",
+      "word_count": 2760
+    },
+    "DE": {
+      "region": "DE",
+      "url": "https://hmgroup.com/de/nachhaltige-entwicklung/",
+      "raw_text_hash": "f7a8b9c0d1234567",
+      "claims": [
+        "Klimapositiv bis 2040 gemäß Science-Based Targets",
+        "Nachhaltige Materialien nach EU-Textilstrategie",
+        "Conscious Choice unter Nachhaltigkeitslabel-Regulierung",
+        "Lieferkettentransparenz nach Lieferkettensorgfaltspflichtengesetz",
+        "CSRD-konforme Nachhaltigkeitsberichterstattung"
+      ],
+      "tone": "regulatory",
+      "word_count": 2530
+    },
+    "IN": {
+      "region": "IN",
+      "url": "https://hmgroup.com/in/sustainability/",
+      "raw_text_hash": "a8b9c0d123456789",
+      "claims": [
+        "Empowering Indian garment workers through skill development",
+        "Sustainable cotton sourcing from Indian farmers",
+        "H&M Foundation projects in India",
+        "Water stewardship in Indian manufacturing"
+      ],
+      "tone": "partnership",
+      "word_count": 1580
+    },
+    "BR": {
+      "region": "BR",
+      "url": "https://hmgroup.com/br/sustentabilidade/",
+      "raw_text_hash": "b9c0d12345678901",
+      "claims": [
+        "Moda consciente e sustentável",
+        "Programa de reciclagem de roupas H&M Brasil",
+        "Materiais sustentáveis em toda a linha Conscious",
+        "H&M comprometida com o futuro da moda sustentável"
+      ],
+      "tone": "aspirational",
+      "word_count": 1340
+    },
+    "SG": {
+      "region": "SG",
+      "url": "https://hmgroup.com/sg/sustainability/",
+      "raw_text_hash": "c0d1234567890123",
+      "claims": [
+        "Conscious Choice available across Singapore stores",
+        "Climate positive strategy aligned with Singapore Green Plan",
+        "Sustainable packaging across Asia Pacific",
+        "Garment collection programme in Singapore"
+      ],
+      "tone": "compliance",
+      "word_count": 1240
+    }
+  },
+  "contradictions": [
+    {
+      "claim": "Conscious Choice: verified sustainable product lines",
+      "evidence_source": "Norwegian Consumer Authority Ruling, 2022",
+      "evidence_text": "Norway's Forbrukertilsynet banned H&M's 'Conscious' labeling as misleading, finding the sustainability index used to qualify products was not scientifically valid and that claims were unsubstantiated. H&M withdrew 96 product claims in Norway.",
+      "contradiction_type": "tone_reversal",
+      "severity": "high",
+      "region_source": "US"
+    },
+    {
+      "claim": "100% sustainably sourced materials by 2030",
+      "evidence_source": "H&M Annual Report 2023, p.67",
+      "evidence_text": "As of FY2023, 82.5% of H&M's materials are defined as 'more sustainable', however H&M Group's own definition of 'more sustainable' includes materials like conventional Better Cotton that are disputed by independent environmental groups.",
+      "contradiction_type": "quantitative_delta",
+      "severity": "high",
+      "region_source": "US"
+    },
+    {
+      "claim": "Fair wages for all garment workers in supply chain",
+      "evidence_source": "Clean Clothes Campaign Report, 2023",
+      "evidence_text": "H&M garment workers in Bangladesh earning $95/month, requiring 3x their wages to reach living wage standards. H&M has not published a living wage roadmap or timeline.",
+      "contradiction_type": "omission",
+      "severity": "high",
+      "region_source": "US"
+    },
+    {
+      "claim": "Conscious Choice unter Nachhaltigkeitslabel-Regulierung",
+      "evidence_source": "Norwegian Consumer Authority Ruling + Current DE Page",
+      "evidence_text": "H&M was found guilty of misleading sustainability claims in Norway in 2022. The German page continues to use nearly identical 'Conscious' labeling and claims without the disclosures or modifications required by Norwegian regulators.",
+      "contradiction_type": "tone_reversal",
+      "severity": "high",
+      "region_source": "DE"
+    },
+    {
+      "claim": "Climate Positive by 2040",
+      "evidence_source": "H&M SEC Filing (20-F equivalent), Nasdaq Stockholm 2023",
+      "evidence_text": "H&M's 2040 climate positive target is described as an 'ambition' contingent on 'industry-wide systemic change' and 'policy support'. Interim 2025 and 2030 targets are not legally binding and may be revised.",
+      "contradiction_type": "tone_reversal",
+      "severity": "medium",
+      "region_source": "US"
+    }
+  ],
+  "sec_filing": {
+    "filing_type": "20-F",
+    "filing_date": "2024-01-31",
+    "public_claim": "100% sustainably sourced materials by 2030",
+    "sec_language": "H&M Group defines 'more sustainable materials' according to its own Sustainability Index. External verification of this definition is limited. Achievement of the 2030 target is contingent on supplier compliance and industry-wide availability of certified materials.",
+    "delta_description": "Public claims state unqualified '100% sustainably sourced' commitment; regulatory filing reveals the definition of 'sustainable' is self-defined, not externally verified, and the target has no enforcement mechanism.",
+    "delta_numeric": null,
+    "discrepancy_severity": "high",
+    "filing_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=HM&type=20-F"
+  },
+  "news_violations": [
+    {
+      "headline": "H&M's 'Conscious' labeling banned in Norway as misleading",
+      "source": "Norwegian Consumer Authority",
+      "date": "2022-07-26",
+      "region": "DE",
+      "url": "https://www.forbrukertilsynet.no/english/press-releases/hm-misleading-sustainability",
+      "summary": "Forbrukertilsynet ruled H&M's Higg Index-based sustainability scoring was not scientifically valid and banned 96 product claims as greenwashing"
+    },
+    {
+      "headline": "H&M faces class action over 'false' green advertising in US",
+      "source": "Bloomberg Law",
+      "date": "2022-07-20",
+      "region": "US",
+      "url": "https://news.bloomberglaw.com/esg/hm-sued-in-us-for-alleged-greenwashing",
+      "summary": "New York federal court class action alleges H&M's sustainability scorecards were misleading and violated consumer protection laws"
+    },
+    {
+      "headline": "UK ASA investigation into H&M sustainability claims launched",
+      "source": "Campaign",
+      "date": "2023-02-08",
+      "region": "US",
+      "url": "https://www.campaignlive.co.uk/article/asa-investigates-hm-sustainability-ads/",
+      "summary": "ASA opens formal investigation following complaints that H&M's Move to a Climate Positive Fashion Future campaign made unsubstantiated claims"
+    }
+  ],
+  "glassdoor_signals": {
+    "avg_rating": 3.1,
+    "total_reviews_sampled": 20,
+    "esg_mention_count": 11,
+    "negative_esg_ratio": 0.73,
+    "sample_reviews": [
+      "The 'Conscious' collection is 90% marketing. No one internally believes we're anywhere near our sustainability targets.",
+      "After Norway banned our claims, we changed nothing except removing Norway-specific language from some materials.",
+      "Sustainability targets get set at board level for investor relations. No one on the ground has a roadmap to hit them.",
+      "The garment workers thing is a real problem and we all know it. The public messaging does not reflect reality."
+    ]
+  },
+  "drift_dna": {
+    "regulatory_language_pct": 88,
+    "commitment_specificity_pct": 19,
+    "omission_pattern_pct": 74,
+    "tone_variation_pct": 48,
+    "dominant_drift_type": "Legal Greenwashing"
+  },
+  "temporal_history": [
+    { "timestamp": "2026-03-01T00:00:00Z", "rdi_score": 71, "analysis_id": "preloaded-hm-v0-mar" },
+    { "timestamp": "2026-04-01T00:00:00Z", "rdi_score": 73, "analysis_id": "preloaded-hm-v0-apr" },
+    { "timestamp": "2026-05-01T00:00:00Z", "rdi_score": 76, "analysis_id": "preloaded-hm-v0-may" },
+    { "timestamp": "2026-05-25T10:00:00Z", "rdi_score": 78, "analysis_id": "preloaded-hm-v1" }
+  ],
+  "bright_data_usage": {
+    "residential_proxies": { "regions_fetched": 5, "product": "Residential Proxies", "requests": 5 },
+    "web_unlocker": { "pages_unlocked": 2, "product": "Web Unlocker", "target": "JS-rendered sustainability pages" },
+    "serp_api": { "queries_run": 2, "product": "SERP API", "targets": ["SEC 20-F search", "greenwashing violations news"] },
+    "scraping_browser": { "sessions": 1, "product": "Scraping Browser", "target": "Glassdoor reviews" },
+    "web_scraper_api": { "datasets": 1, "product": "Web Scraper API", "target": "Structured regulatory filing data" }
+  }
+}

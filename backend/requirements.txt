@@ -1,0 +1,28 @@
+# Reality Drift — Backend Dependencies
+# Pinned to installed versions (May 2026)
+
+# Web framework
+fastapi==0.136.3
+uvicorn==0.48.0
+sse-starlette==3.4.4
+python-multipart==0.0.29
+
+# HTTP / scraping
+httpx==0.28.1
+beautifulsoup4==4.14.3
+lxml==6.1.1
+playwright==1.60.0
+aiofiles==25.1.0
+
+# AI
+anthropic==0.104.1
+
+# Memory
+cognee==1.1.0
+lancedb==0.30.2
+networkx==3.6.1
+
+# Data / config
+pydantic==2.12.5
+pydantic-settings==2.14.1
+python-dotenv==1.0.1

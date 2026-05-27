@@ -1,0 +1,192 @@
+{
+  "company": "Nike",
+  "url": "https://about.nike.com/en/impact",
+  "analysis_id": "preloaded-nike-v1",
+  "timestamp": "2026-05-25T10:00:00Z",
+  "is_preloaded": true,
+  "rdi_score": 71,
+  "rdi_components": {
+    "geographic_drift": { "score": 68, "weight": 0.30, "weighted": 20.4 },
+    "claim_evidence":   { "score": 84, "weight": 0.35, "weighted": 29.4 },
+    "temporal_drift":   { "score": 44, "weight": 0.20, "weighted": 8.8 },
+    "disclosure_gap":   { "score": 87, "weight": 0.15, "weighted": 13.05 }
+  },
+  "regional_pages": {
+    "US": {
+      "region": "US",
+      "url": "https://about.nike.com/en/impact",
+      "raw_text_hash": "f1a2b3c4d5e67890",
+      "claims": [
+        "Move to Zero: journey toward zero carbon and zero waste",
+        "100% renewable energy in owned and operated facilities",
+        "50% reduction in carbon emissions across supply chain by 2030",
+        "Nike Manufacturing Index ensures supplier accountability",
+        "FY25 target: 70% sustainable materials in footwear"
+      ],
+      "tone": "aspirational",
+      "word_count": 3120
+    },
+    "DE": {
+      "region": "DE",
+      "url": "https://about.nike.com/de/impact",
+      "raw_text_hash": "a2b3c4d5e6f78901",
+      "claims": [
+        "Move to Zero-Initiative für Klimaneutralität",
+        "Erneuerbare Energien in europäischen Betriebsstätten bis 2025",
+        "Nachhaltige Materialien gemäß EU Green Claims Directive",
+        "Lieferkettentransparenz nach Sorgfaltspflichtengesetz",
+        "Nike CSRD-Berichterstattung ab Geschäftsjahr 2025"
+      ],
+      "tone": "regulatory",
+      "word_count": 2890
+    },
+    "IN": {
+      "region": "IN",
+      "url": "https://about.nike.com/in/impact",
+      "raw_text_hash": "b3c4d5e6f7890123",
+      "claims": [
+        "Partnering with Indian manufacturing for sustainable production",
+        "Worker wellbeing programs across South Asian supply chain",
+        "Investing in sustainable cotton sourcing from Indian farmers",
+        "Community development through sport initiatives"
+      ],
+      "tone": "partnership",
+      "word_count": 1650
+    },
+    "BR": {
+      "region": "BR",
+      "url": "https://about.nike.com/pt-br/impact",
+      "raw_text_hash": "c4d5e6f789012345",
+      "claims": [
+        "Move to Zero: compromisso com sustentabilidade",
+        "Materiais reciclados em produtos Nike Brasil",
+        "Parceria com atletas brasileiros em iniciativas verdes",
+        "Programa Nike Community Impact no Brasil"
+      ],
+      "tone": "aspirational",
+      "word_count": 1420
+    },
+    "SG": {
+      "region": "SG",
+      "url": "https://about.nike.com/en-sg/impact",
+      "raw_text_hash": "d5e6f78901234567",
+      "claims": [
+        "Move to Zero aligned with Singapore Green Plan",
+        "Sustainable product lines available in APAC",
+        "Regional distribution centre powered by solar",
+        "Supplier code of conduct enforced across APAC"
+      ],
+      "tone": "compliance",
+      "word_count": 1380
+    }
+  },
+  "contradictions": [
+    {
+      "claim": "50% reduction in carbon emissions across supply chain by 2030",
+      "evidence_source": "Nike FY23 Impact Report, p.89",
+      "evidence_text": "Supply chain emissions (Scope 3) increased 6% in FY2023. Current trajectory does not align with 2030 targets without significant supplier transitions not yet underway.",
+      "contradiction_type": "quantitative_delta",
+      "severity": "high",
+      "region_source": "US"
+    },
+    {
+      "claim": "Nike Manufacturing Index ensures supplier accountability",
+      "evidence_source": "Business & Human Rights Resource Centre, 2023",
+      "evidence_text": "At least 12 Nike suppliers cited for labor violations in Vietnam and Cambodia in 2022-2023, including excessive overtime, wage theft, and union suppression. Nike Manufacturing Index scores not publicly disclosed.",
+      "contradiction_type": "omission",
+      "severity": "high",
+      "region_source": "US"
+    },
+    {
+      "claim": "Worker wellbeing programs across South Asian supply chain",
+      "evidence_source": "Workers Rights Consortium Report, 2023",
+      "evidence_text": "Nike's Indian and Pakistani suppliers documented for 12-16 hour shifts, below-minimum wages, and no grievance mechanism. Nike's published wellbeing claims do not address these factories.",
+      "contradiction_type": "omission",
+      "severity": "high",
+      "region_source": "IN"
+    },
+    {
+      "claim": "100% renewable energy in owned and operated facilities",
+      "evidence_source": "Nike SEC 10-K 2023, p.34",
+      "evidence_text": "Owned and operated facilities represent less than 5% of total energy footprint. Scope 3 emissions (supply chain, 95% of footprint) remain predominantly fossil fuel-powered.",
+      "contradiction_type": "omission",
+      "severity": "medium",
+      "region_source": "US"
+    },
+    {
+      "claim": "Nachhaltige Materialien gemäß EU Green Claims Directive",
+      "evidence_source": "EU Green Claims Directive Enforcement, Netherlands 2023",
+      "evidence_text": "Nike received formal inquiry from Dutch Consumer Authority regarding 'sustainable materials' claims that could not be substantiated under forthcoming EU Green Claims standards.",
+      "contradiction_type": "tone_reversal",
+      "severity": "medium",
+      "region_source": "DE"
+    }
+  ],
+  "sec_filing": {
+    "filing_type": "10-K",
+    "filing_date": "2023-07-25",
+    "public_claim": "50% reduction in carbon emissions across supply chain by 2030",
+    "sec_language": "We have set targets to reduce Scope 3 emissions. Achieving these targets depends substantially on the actions of third-party suppliers over which we have limited control. There can be no assurance these targets will be achieved.",
+    "delta_description": "Public claims state a specific 50% supply chain reduction commitment; 10-K filing discloses no assurance of achievement and limited supplier control — the two disclosures are materially inconsistent.",
+    "delta_numeric": null,
+    "discrepancy_severity": "high",
+    "filing_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320187&type=10-K"
+  },
+  "news_violations": [
+    {
+      "headline": "Nike suppliers in Vietnam cited for widespread labor violations",
+      "source": "Business & Human Rights Resource Centre",
+      "date": "2023-08-15",
+      "region": "IN",
+      "url": "https://www.business-humanrights.org/en/latest-news/nike/",
+      "summary": "Documented violations at 12+ Nike suppliers including illegal overtime, union suppression, and physical abuse reported by workers"
+    },
+    {
+      "headline": "Norway Consumer Authority finds Nike sustainability claims misleading",
+      "source": "Norwegian Consumer Authority",
+      "date": "2022-06-01",
+      "region": "DE",
+      "url": "https://www.forbrukertilsynet.no/english/press-releases/",
+      "summary": "Forbrukertilsynet found Nike's sustainability marketing claims lacked substantiation required under Norwegian marketing law"
+    },
+    {
+      "headline": "Nike faces greenwashing lawsuit over recycled materials claims",
+      "source": "Reuters",
+      "date": "2024-01-18",
+      "region": "US",
+      "url": "https://reuters.com/legal/nike-greenwashing-lawsuit",
+      "summary": "Class action alleges Nike misrepresented percentage of recycled content in key product lines"
+    }
+  ],
+  "glassdoor_signals": {
+    "avg_rating": 3.7,
+    "total_reviews_sampled": 20,
+    "esg_mention_count": 7,
+    "negative_esg_ratio": 0.43,
+    "sample_reviews": [
+      "The sustainability story we tell externally doesn't match what happens with our factory partners. It's mostly marketing.",
+      "Supply chain issues get buried. Anyone who raises them is told to stay in their lane.",
+      "Genuinely proud of some programs but the supply chain side is a black box even internally."
+    ]
+  },
+  "drift_dna": {
+    "regulatory_language_pct": 52,
+    "commitment_specificity_pct": 38,
+    "omission_pattern_pct": 81,
+    "tone_variation_pct": 55,
+    "dominant_drift_type": "Supply Chain Omission"
+  },
+  "temporal_history": [
+    { "timestamp": "2026-03-01T00:00:00Z", "rdi_score": 64, "analysis_id": "preloaded-nike-v0-mar" },
+    { "timestamp": "2026-04-01T00:00:00Z", "rdi_score": 67, "analysis_id": "preloaded-nike-v0-apr" },
+    { "timestamp": "2026-05-01T00:00:00Z", "rdi_score": 69, "analysis_id": "preloaded-nike-v0-may" },
+    { "timestamp": "2026-05-25T10:00:00Z", "rdi_score": 71, "analysis_id": "preloaded-nike-v1" }
+  ],
+  "bright_data_usage": {
+    "residential_proxies": { "regions_fetched": 5, "product": "Residential Proxies", "requests": 5 },
+    "web_unlocker": { "pages_unlocked": 1, "product": "Web Unlocker", "target": "JS-heavy impact report" },
+    "serp_api": { "queries_run": 2, "product": "SERP API", "targets": ["SEC 10-K search", "labor violations news"] },
+    "scraping_browser": { "sessions": 1, "product": "Scraping Browser", "target": "Glassdoor reviews" },
+    "web_scraper_api": { "datasets": 1, "product": "Web Scraper API", "target": "Structured supplier data" }
+  }
+}
