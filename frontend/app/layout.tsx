@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-// ── Stitch Design System fonts ────────────────────────────────────
-// Inter: UI chrome, headlines, body (Stitch spec: display-lg / headline-md / body-base)
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -11,8 +9,6 @@ const inter = Inter({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-// JetBrains Mono: all data points, timestamps, drift %, coordinates
-// (Stitch spec: data-label / data-value / caption)
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
@@ -33,14 +29,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        {/* Material Symbols — used throughout the Stitch design */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        />
+      </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased min-h-screen`}
-        style={{ backgroundColor: "var(--background)", color: "var(--on-surface)" }}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-body-base antialiased`}
       >
         {children}
       </body>

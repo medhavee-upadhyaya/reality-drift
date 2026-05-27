@@ -113,7 +113,7 @@ Cognee 1.1.0 init        → ✅ "Cognee initialized at ./cognee_db"
 
 ## NOT YET DONE — Remaining Tasks
 
-### ✅ COMPLETE — Stitch Design Integration (Day 3)
+### ✅ COMPLETE — Full Stitch Rebuild + Light/Dark Mode (Day 3)
 - [x] Stitch project fetched: "Global Narrative Drift Auditor" (ID: 387684644234286406)
 - [x] `frontend/app/globals.css` — full Stitch color tokens (navy surfaces, Electric Blue primary, Drift Red tertiary, JetBrains Mono)
 - [x] `frontend/components/LandingPage.tsx` — Stitch visual layer applied (glassmorphism cards, primary blue CTA, Inter + Mono fonts)

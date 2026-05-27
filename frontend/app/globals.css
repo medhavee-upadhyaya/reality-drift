@@ -2,123 +2,167 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ════════════════════════════════════════════════════════════════
-   Stitch Design System — "Global Narrative Drift Auditor"
-   Project: 387684644234286406
-   Aesthetic: Cinematic Intelligence / Technical Minimalism
-   ════════════════════════════════════════════════════════════════ */
-:root {
-  /* ── Surfaces (deep-navy tier system) ── */
-  --background:                 #0c1322;
-  --surface-container-lowest:   #070e1d;
-  --surface-container-low:      #151b2b;
-  --surface-container:          #191f2f;
-  --surface-container-high:     #232a3a;
-  --surface-container-highest:  #2e3445;
-  --surface-bright:             #32394a;
+/* ════════════════════════════════════════════════════════════════════
+   Reality Drift — Stitch Design System
+   Project: "Global Narrative Drift Auditor" (387684644234286406)
+   Modes: dark (default / Stitch original) + light
+   Colors stored as RGB triplets so Tailwind opacity modifiers work.
+   ════════════════════════════════════════════════════════════════════ */
 
-  /* ── Text ── */
-  --on-surface:                 #dce2f8;
-  --on-surface-variant:         #c2c6d6;
+/* ── DARK MODE (default — matches Stitch exactly) ── */
+.dark {
+  --color-background:           5 11 26;
+  --color-surface:              12 19 34;
+  --color-sc-lowest:            7 14 29;
+  --color-sc-low:               21 27 43;
+  --color-sc:                   25 31 47;
+  --color-sc-high:              35 42 58;
+  --color-sc-highest:           46 52 69;
+  --color-surface-bright:       50 57 74;
+  --color-on-surface:           220 226 248;
+  --color-on-surface-variant:   194 198 214;
+  --color-primary:              173 198 255;
+  --color-primary-container:    77 142 255;
+  --color-on-primary:           0 46 106;
+  --color-primary-fixed:        216 226 255;
+  --color-tertiary:             255 179 173;
+  --color-tertiary-container:   255 84 81;
+  --color-on-tertiary:          104 0 10;
+  --color-outline:              140 144 159;
+  --color-outline-variant:      66 71 84;
+  --color-inverse-on-surface:   42 48 65;
 
-  /* ── Primary — Electric Blue (Intelligence layer) ── */
-  --primary:                    #adc6ff;
-  --primary-dim:                #4d8eff;
-  --primary-fixed:              #d8e2ff;
-  --on-primary:                 #002e6a;
-
-  /* ── Tertiary — Drift Alert Red (contradictions / critical) ── */
-  --tertiary:                   #ffb3ad;
-  --tertiary-container:         #ff5451;
-  --tertiary-glow:              rgba(255, 84, 81, 0.25);
-
-  /* ── Borders ── */
-  --outline:                    #8c909f;
-  --outline-variant:            #424754;
-
-  /* ── Legacy aliases (keep for sub-components) ── */
-  --foreground:                 #dce2f8;
-  --navy:                       #0c1322;
-  --navy-light:                 #151b2b;
-  --red:                        #ff5451;
-  --red-glow:                   rgba(255, 84, 81, 0.25);
-  --amber:                      #f59e0b;
-  --green:                      #22c55e;
-  --border:                     rgba(66, 71, 84, 0.5);
-  --card:                       rgba(25, 31, 47, 0.85);
+  /* Glass panel — dark */
+  --glass-bg:       rgba(15, 23, 42, 0.65);
+  --glass-border:   rgba(255, 255, 255, 0.06);
+  --glass-border-t: rgba(173, 198, 255, 0.08);
+  color-scheme: dark;
 }
 
-* {
-  box-sizing: border-box;
+/* ── LIGHT MODE ── */
+.light {
+  --color-background:           240 244 255;
+  --color-surface:              238 241 250;
+  --color-sc-lowest:            248 249 255;
+  --color-sc-low:               237 240 250;
+  --color-sc:                   227 232 245;
+  --color-sc-high:              217 222 240;
+  --color-sc-highest:           207 212 235;
+  --color-surface-bright:       252 253 255;
+  --color-on-surface:           25 28 37;
+  --color-on-surface-variant:   68 71 79;
+  --color-primary:              0 90 194;
+  --color-primary-container:    43 114 213;
+  --color-on-primary:           255 255 255;
+  --color-primary-fixed:        216 226 255;
+  --color-tertiary:             192 0 15;
+  --color-tertiary-container:   255 100 95;
+  --color-on-tertiary:          255 255 255;
+  --color-outline:              116 119 129;
+  --color-outline-variant:      196 198 208;
+  --color-inverse-on-surface:   220 226 248;
+
+  /* Glass panel — light */
+  --glass-bg:       rgba(255, 255, 255, 0.65);
+  --glass-border:   rgba(0, 0, 0, 0.08);
+  --glass-border-t: rgba(0, 90, 194, 0.1);
+  color-scheme: light;
 }
 
-html, body {
-  background-color: var(--background);
-  color: var(--on-surface);
-  font-family: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+/* ── Base reset ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-on-surface));
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* ── Custom scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--surface-container-lowest); }
-::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--outline); }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: rgb(var(--color-sc-lowest)); }
+::-webkit-scrollbar-thumb { background: rgb(var(--color-outline-variant)); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--color-outline)); }
 
-/* ── Animations ── */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px var(--tertiary-glow); }
-  50%       { box-shadow: 0 0 40px var(--tertiary-glow), 0 0 60px var(--tertiary-glow); }
-}
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes bar-fill {
-  from { width: 0%; }
-}
-@keyframes primary-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.6; }
+/* ── Selection highlight ── */
+::selection {
+  background: rgb(var(--color-primary) / 0.25);
+  color: rgb(var(--color-primary));
 }
 
-.animate-fade-in-up { animation: fade-in-up 0.6s ease forwards; }
-.pulse-glow         { animation: pulse-glow 2s ease-in-out infinite; }
-.primary-pulse      { animation: primary-pulse 2s ease-in-out infinite; }
+/* ════════════════════════════════════════════════════════════════════
+   STITCH COMPONENT CLASSES
+   ════════════════════════════════════════════════════════════════════ */
 
-/* ── Glass Card — Stitch glassmorphism spec ──
-   "Panels: slightly elevated with a subtle fill and a 1px stroke
-    at 10% white opacity. Glass edge: subtle top-light border." ── */
-.glass-card {
-  background: rgba(25, 31, 47, 0.85);
-  border: 1px solid rgba(66, 71, 84, 0.65);
-  border-top-color: rgba(173, 198, 255, 0.07); /* top-light glass edge */
-  border-radius: 8px;
+/* ── Glass panel — the core UI surface from Stitch ── */
+.glass-panel {
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-top-color: var(--glass-border-t);
 }
 
-/* ── Mono / data display — JetBrains Mono ── */
+/* ── Drift glow — warning text shadow for high drift alerts ── */
+.drift-glow {
+  text-shadow: 0 0 12px rgb(var(--color-tertiary-container) / 0.5);
+}
+
+/* ── Primary glow — electric blue data highlight ── */
+.primary-glow {
+  text-shadow: 0 0 12px rgb(var(--color-primary) / 0.4);
+}
+
+/* ── Scan line — moves top → bottom, used on the globe hero ── */
+.scan-line {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgb(var(--color-primary)), transparent);
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  animation: scan 4s linear infinite;
+}
+
+/* ── Progress bar — animated fill using CSS custom property ── */
+.progress-bar {
+  animation: drift-progress 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ── Ping ring animation ── */
+.ping-ring {
+  animation: ping-anim 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ── RDI number — monospaced data display ── */
 .rdi-number {
-  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', 'Courier New', monospace;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-variant-numeric: tabular-nums;
 }
 
-.data-label {
-  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+/* ── Data label — uppercase monospaced section headers ── */
+.data-label-text {
+  font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--on-surface-variant);
+  color: rgb(var(--color-on-surface-variant));
 }
 
 /* ── Severity chips ── */
-.severity-high   {
-  background: rgba(255, 84, 81, 0.12);
-  color: #ffb3ad;
-  border: 1px solid rgba(255, 84, 81, 0.35);
+.severity-high {
+  background: rgb(var(--color-tertiary-container) / 0.12);
+  color: rgb(var(--color-tertiary));
+  border: 1px solid rgb(var(--color-tertiary-container) / 0.35);
 }
 .severity-medium {
   background: rgba(245, 158, 11, 0.12);
@@ -131,36 +175,71 @@ html, body {
   border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-/* ── Intelligence input — focus glow ── */
+/* ── Intel input ── */
 .intel-input {
-  background: var(--surface-container-lowest);
-  border: 1px solid var(--outline-variant);
-  border-radius: 4px;
-  color: var(--on-surface);
+  background: rgb(var(--color-sc-lowest));
+  border: 1px solid rgb(var(--color-outline-variant) / 0.5);
+  color: rgb(var(--color-on-surface));
   transition: border-color 80ms ease, box-shadow 80ms ease;
 }
-.intel-input::placeholder { color: var(--outline); }
+.intel-input::placeholder { color: rgb(var(--color-outline)); }
 .intel-input:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(173, 198, 255, 0.12);
+  border-color: rgb(var(--color-primary));
+  box-shadow: 0 0 0 2px rgb(var(--color-primary) / 0.12);
 }
 
-/* ── Primary action button ── */
-.btn-primary {
-  background: var(--primary);
-  color: var(--on-primary);
-  border-radius: 4px;
-  font-weight: 600;
-  transition: background 80ms ease, box-shadow 80ms ease;
+/* ════════════════════════════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ════════════════════════════════════════════════════════════════════ */
+
+@keyframes scan {
+  0%   { top: -2px; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
 }
-.btn-primary:hover  { background: var(--primary-fixed); }
-.btn-primary:active { background: var(--primary-dim); }
-.btn-primary:disabled {
-  background: var(--surface-container-highest);
-  color: var(--outline);
-  cursor: not-allowed;
+
+@keyframes drift-progress {
+  from { width: 0%; }
+  to   { width: var(--progress, 0%); }
 }
+
+@keyframes ping-anim {
+  0%        { transform: scale(1); opacity: 1; }
+  75%, 100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spin-slow-reverse {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%       { opacity: 0.65; transform: scale(1.04); }
+}
+
+@keyframes pulse-drift {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.animate-fade-in-up     { animation: fade-in-up 0.5s ease forwards; }
+.animate-spin-slow      { animation: spin-slow 20s linear infinite; }
+.animate-spin-slow-rev  { animation: spin-slow-reverse 30s linear infinite; }
+.animate-pulse-slow     { animation: pulse-slow 3s ease-in-out infinite; }
+.animate-pulse-drift    { animation: pulse-drift 2s ease-in-out infinite; }
 
 @layer utilities {
   .text-balance { text-wrap: balance; }
