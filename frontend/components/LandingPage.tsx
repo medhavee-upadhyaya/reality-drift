@@ -2,19 +2,26 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { DEMO_COMPANIES } from "@/lib/preloaded";
+import { AppMode } from "@/lib/types";
 import Navbar from "@/components/Navbar";
 import StatusBar from "@/components/StatusBar";
+import ModeToggle from "@/components/ui/ModeToggle";
 
 export default function LandingPage() {
   const router = useRouter();
   const [input, setInput] = useState("");
+  const [regionalDomains, setRegionalDomains] = useState("");
+  const [mode, setMode] = useState<AppMode>("outsider");
 
   const handleAnalyze = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
-    router.push(`/analyze/${encodeURIComponent(input.trim())}`);
+    const dest = mode === "compliance"
+      ? `/compliance/${encodeURIComponent(input.trim())}`
+      : `/analyze/${encodeURIComponent(input.trim())}`;
+    router.push(dest);
   };
 
   return (
@@ -152,44 +159,97 @@ export default function LandingPage() {
           </div>
         </motion.div>
 
+        {/* ── Mode toggle ── */}
+        <motion.div
+          className="mb-lg z-30"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.35 }}
+        >
+          <ModeToggle mode={mode} onChange={setMode} />
+        </motion.div>
+
         {/* ── Command bar / search ── */}
         <motion.div
-          className="w-full max-w-2xl z-30 -mt-8 md:-mt-16 mb-xl"
+          className="w-full max-w-2xl z-30 -mt-4 mb-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <form
-            onSubmit={handleAnalyze}
-            className="glass-panel rounded-xl flex items-center group focus-within:ring-2 focus-within:ring-primary/40 transition-all duration-300"
-          >
-            <div className="flex items-center px-sm text-on-surface-variant group-focus-within:text-primary transition-colors">
-              <span className="material-symbols-outlined">search</span>
+          <form onSubmit={handleAnalyze} className="space-y-2">
+            {/* Primary input */}
+            <div className="glass-panel rounded-xl flex items-center group focus-within:ring-2 focus-within:ring-primary/40 transition-all duration-300">
+              <div className="flex items-center px-sm text-on-surface-variant group-focus-within:text-primary transition-colors">
+                <span className="material-symbols-outlined">
+                  {mode === "compliance" ? "business" : "search"}
+                </span>
+              </div>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={
+                  mode === "compliance"
+                    ? "Enter your company's primary domain..."
+                    : "Enter company URL or name to analyze drift..."
+                }
+                className="flex-1 bg-transparent border-none text-on-surface placeholder:text-outline focus:ring-0 focus:outline-none font-data-value text-[16px] py-4"
+              />
+              <button
+                type="submit"
+                disabled={!input.trim()}
+                className="bg-primary text-on-primary px-lg py-4 rounded-xl font-data-label text-data-label uppercase tracking-widest hover:bg-primary-fixed disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-xs"
+              >
+                {mode === "compliance" ? "Run Compliance Check" : "Analyze"}
+                <span className="material-symbols-outlined text-[18px]">
+                  {mode === "compliance" ? "policy" : "terminal"}
+                </span>
+              </button>
             </div>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Enter company URL or name to analyze drift..."
-              className="flex-1 bg-transparent border-none text-on-surface placeholder:text-outline focus:ring-0 focus:outline-none font-data-value text-[16px] py-4"
-            />
-            <button
-              type="submit"
-              disabled={!input.trim()}
-              className="bg-primary text-on-primary px-lg py-4 rounded-xl font-data-label text-data-label uppercase tracking-widest hover:bg-primary-fixed disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-xs"
-            >
-              Analyze
-              <span className="material-symbols-outlined text-[18px]">terminal</span>
-            </button>
+
+            {/* Compliance-only: regional domains input */}
+            <AnimatePresence>
+              {mode === "compliance" && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="glass-panel rounded-xl flex items-center group focus-within:ring-1 focus-within:ring-primary/20 transition-all">
+                    <div className="flex items-center px-sm text-on-surface-variant/50">
+                      <span className="material-symbols-outlined text-[18px]">language</span>
+                    </div>
+                    <input
+                      type="text"
+                      value={regionalDomains}
+                      onChange={(e) => setRegionalDomains(e.target.value)}
+                      placeholder="Add regional domains (optional): nike.de, nike.com.br, nike.co.in — comma separated"
+                      className="flex-1 bg-transparent border-none text-on-surface-variant placeholder:text-outline/60 focus:ring-0 focus:outline-none font-data-label text-[13px] py-3"
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </form>
 
           {/* Recent suggestions */}
           <div className="flex justify-center gap-md mt-sm">
-            <span className="font-data-label text-[10px] text-on-surface-variant uppercase">Recent:</span>
-            {["tesla.com", "google.ai", "reuters.com"].map((s) => (
+            <span className="font-data-label text-[10px] text-on-surface-variant uppercase">
+              {mode === "compliance" ? "Demo:" : "Recent:"}
+            </span>
+            {(mode === "compliance"
+              ? ["shell.com", "nike.com", "hm.com"]
+              : ["tesla.com", "google.ai", "reuters.com"]
+            ).map((s) => (
               <button
                 key={s}
-                onClick={() => router.push(`/analyze/${encodeURIComponent(s)}`)}
+                onClick={() => {
+                  const dest = mode === "compliance"
+                    ? `/compliance/${encodeURIComponent(s.split(".")[0])}`
+                    : `/analyze/${encodeURIComponent(s)}`;
+                  router.push(dest);
+                }}
                 className="font-data-label text-[10px] text-primary/70 hover:text-primary transition-colors underline decoration-primary/30"
               >
                 {s}

@@ -6,21 +6,17 @@
 
 ## ⚡ IMMEDIATE NEXT TASK
 
-**Apply the Google Stitch design to the frontend.**
+**Test the live pipeline — fill `.env` and fire a real `POST /api/analyze`.**
 
-The `stitch` MCP server is live (configured in `.claude.json` for this project).  
-Do NOT read source files first — just call the Stitch MCP tools, get the design, apply it.
+`backend/.env` already has all API keys (Anthropic + Bright Data). Start both servers and test:
 
 **Steps:**
-1. Call Stitch MCP → list screens / get components
-2. Apply visual layer to:
-   - `frontend/app/globals.css` (colors, fonts, spacing tokens)
-   - `frontend/components/LandingPage.tsx` (landing layout)
-   - `frontend/app/layout.tsx` (root font/metadata)
-   - `frontend/app/analyze/[company]/page.tsx` (dashboard, if Stitch has one)
-3. Keep ALL logic, data, and component props exactly as-is — visual only
-4. `cd frontend && npm run build` → must pass with zero errors
-5. Mark this task ✅ below
+1. Start backend: `cd backend && source venv/bin/activate && uvicorn main:app --reload`
+2. Start frontend: `cd frontend && npm run dev`
+3. Test demo (should be instant): `curl http://localhost:8000/api/companies/shell` → RDI=84
+4. Test live: `POST /api/analyze` with `{"url":"https://tesla.com","company_name":"Tesla"}` → all 5 Bright Data products fire, Claude returns JSON, Cognee stores result
+5. Open http://localhost:3000 → verify Shell/Nike/H&M demo cards work, live analysis streams via SSE
+6. If any Bright Data product fails → check zone names in `backend/scrapers/geo_fetcher.py` and `glassdoor.py`
 
 ---
 
@@ -119,23 +115,50 @@ Cognee 1.1.0 init        → ✅ "Cognee initialized at ./cognee_db"
 - [x] `frontend/components/LandingPage.tsx` — Stitch visual layer applied (glassmorphism cards, primary blue CTA, Inter + Mono fonts)
 - [x] `frontend/app/layout.tsx` — switched to Google Fonts: Inter + JetBrains Mono (replaces Geist local fonts)
 - [x] `frontend/app/analyze/[company]/page.tsx` — Stitch dashboard visual layer applied
+- [x] `.gitignore` created at project root
+- [x] `backend/.env` — all API keys wired (Anthropic, Bright Data customer/zone credentials)
+- [x] `backend/scrapers/geo_fetcher.py` — zone `residential_proxy1`, Web Unlocker via Bearer API
+- [x] `backend/scrapers/glassdoor.py` — zone `scraping_browser1`
+
+### ✅ COMPLETE — Internal Compliance Mode (Day 3, end of day)
+- [x] `backend/api/routes/compliance.py` — 3 new endpoints: `POST /api/compliance/check-claim`, `POST /api/compliance/readiness`, `POST /api/compliance/recommended-actions` (all call Claude Sonnet)
+- [x] `backend/main.py` — compliance router mounted at `/api`
+- [x] `frontend/lib/types.ts` — Added `AppMode`, `ComplianceCheckResult`, `RegulatoryReadinessResult`, `RecommendedActionsResult` + related types
+- [x] `frontend/components/ui/ModeToggle.tsx` — Outsider / Internal Compliance toggle for landing page
+- [x] `frontend/components/ui/ModeNav.tsx` — Mode switching tabs on dashboard pages
+- [x] `frontend/components/ui/PresentationMode.tsx` — `Cmd+Shift+D` keyboard shortcut, adds `.presentation-mode` CSS class
+- [x] `frontend/components/compliance/RegionalTeamBreakdown.tsx` — Table with per-region drift scores, expandable contradiction rows
+- [x] `frontend/components/compliance/PrePublishChecker.tsx` — Textarea + region selector → calls `/api/compliance/check-claim` → CLEAR/MINOR_DRIFT/CONFLICT verdict card
+- [x] `frontend/components/compliance/DriftAlertSettings.tsx` — Threshold slider + channel + frequency (UI only, toast confirmation)
+- [x] `frontend/components/compliance/RegulatoryReadiness.tsx` — EU CSRD readiness card → calls `/api/compliance/readiness` → dimension checklist
+- [x] `frontend/components/compliance/RecommendedActions.tsx` — 3-tier (Urgent/This Week/Next Quarter) panel, different copy per mode
+- [x] `frontend/app/compliance/[company]/page.tsx` — Full internal compliance dashboard (new route)
+- [x] `frontend/components/LandingPage.tsx` — Mode toggle + secondary regional domains input + mode-aware routing
+- [x] `frontend/app/analyze/[company]/page.tsx` — ModeNav bar + RecommendedActions panel + demo-data label
+- [x] `frontend/app/globals.css` — `.presentation-mode` CSS rules
+- [x] `frontend/app/layout.tsx` — `<PresentationMode />` mounted globally
+- [x] `npm run build` → ✅ Zero TypeScript errors, 4 routes compile clean
+
+### ✅ COMPLETE — Sub-component Stitch Design Tokens (Day 3, later)
+- [x] `components/rdi/RDIReveal.tsx` — `font-data-label/value`, `text-on-surface-variant`, `text-outline` (no more `text-white/40`)
+- [x] `components/rdi/RDIBreakdown.tsx` — `bg-surface-container`, Stitch typography classes
+- [x] `components/dna/DriftDNA.tsx` — `border-outline-variant/20`, `text-on-surface`, `bg-surface-container`
+- [x] `components/filing/FilingDiscrepancyCard.tsx` — `border-tertiary/30`, `text-tertiary`, Material Symbol icon
+- [x] `components/timeline/DriftTimeline.tsx` — `glass-panel` tooltip, `useEffect` reads CSS vars for Recharts SVG colors
+- [x] `components/search/LiveAnalysisProgress.tsx` — `from-primary to-tertiary` gradient, `text-primary` for "Running..."
 - [x] `npm run build` → ✅ Zero TypeScript errors, all 3 routes build clean
-- [x] `.gitignore` created at project root (covers .env, .claude.json, venv, cognee_db, node_modules, etc.)
 
-### 🔥 RIGHT NOW — Fill in `.env`
-Copy `backend/.env.example` to `backend/.env`, add real API keys:
-- `ANTHROPIC_API_KEY` (user has this)
-- Bright Data credentials — see `docs/ENV_AND_DEPLOY.md`
-- Then test: `POST /api/analyze` with a real company URL
-
-### 🔲 Day 3 — Test Live Pipeline (after .env filled)
+### 🔲 Day 3 — Test Live Pipeline
+- [ ] Start both servers: backend (`uvicorn main:app --reload`) + frontend (`npm run dev`)
 - [ ] `POST /api/analyze` with real non-demo URL → all 5 Bright Data products fire
 - [ ] Claude returns valid JSON for all 5 tasks
 - [ ] Cognee: 2 analyses of same company → temporal_history has 2 points
+- [ ] Frontend SSE stream (LiveAnalysisProgress) shows all 7 steps completing
 
 ### 🔲 Day 4 (May 28) — Polish + Full Demo Test
 - [ ] Full demo flow: Shell → Nike → H&M (instant) → live URL (streamed, ~2 min)
-- [ ] Verify all 6 dashboard panels render correctly with Stitch design applied
+- [ ] Verify all 6 dashboard panels render correctly (RDIReveal, RDIBreakdown, DriftDNA, FilingDiscrepancyCard, DriftTimeline, LiveAnalysisProgress)
+- [ ] Check light mode toggle works across all components
 
 ### 🔲 Day 5 (May 29) — Deploy + Submit
 - [ ] Deploy backend to Railway (see `docs/ENV_AND_DEPLOY.md`)
@@ -154,6 +177,10 @@ Copy `backend/.env.example` to `backend/.env`, add real API keys:
 | Cognee 1.1.0: lazy import required | `memory/store.py`, `memory/retrieve.py` | ✅ `import cognee` inside functions only |
 | TypeScript: `ctx` not narrowed in closures | `components/globe/DriftGlobe.tsx` | ✅ Used `const draw = ctx` alias |
 | Next.js: `layout.tsx` auto-created by CLI | `frontend/app/layout.tsx` | ✅ Read then Edited (not Write) |
+| Recharts SVG props can't use CSS vars directly | `components/timeline/DriftTimeline.tsx` | ✅ `useEffect` reads `getComputedStyle` to extract RGB triplets into rgba() strings |
+| Bright Data residential zone name | `backend/scrapers/geo_fetcher.py` | ✅ Zone: `residential_proxy1`, country suffix e.g. `-country-us` |
+| Bright Data scraping browser zone name | `backend/scrapers/glassdoor.py` | ✅ Zone: `scraping_browser1` in CDP URL |
+| Web Unlocker: no password, only API token | `backend/scrapers/geo_fetcher.py` | ✅ Uses `POST https://api.brightdata.com/request` with `Authorization: Bearer {API_TOKEN}` |
 
 ---
 

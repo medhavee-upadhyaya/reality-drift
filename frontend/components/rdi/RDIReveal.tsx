@@ -20,11 +20,10 @@ export default function RDIReveal({ score, animate = true }: RDIRevealProps) {
   useEffect(() => {
     if (!animate) return;
 
-    // Delay then count up
     const startDelay = setTimeout(() => {
       setRevealed(true);
       let current = 0;
-      const duration = 1800; // ms
+      const duration = 1800;
       const steps = 60;
       const increment = score / steps;
       const interval = duration / steps;
@@ -53,7 +52,7 @@ export default function RDIReveal({ score, animate = true }: RDIRevealProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: revealed ? 1 : 0 }}
         transition={{ delay: 0.2 }}
-        className="text-xs uppercase tracking-[0.2em] text-white/40"
+        className="font-data-label text-data-label text-on-surface-variant uppercase tracking-[0.2em]"
       >
         Reality Drift Index
       </motion.div>
@@ -66,7 +65,7 @@ export default function RDIReveal({ score, animate = true }: RDIRevealProps) {
         className="relative"
       >
         <span
-          className="rdi-number text-8xl font-bold leading-none"
+          className="rdi-number font-data-value text-[80px] leading-none tabular-nums"
           style={{
             color,
             textShadow: `0 0 40px ${color}80`,
@@ -74,7 +73,7 @@ export default function RDIReveal({ score, animate = true }: RDIRevealProps) {
         >
           {displayScore}
         </span>
-        <span className="rdi-number text-3xl text-white/30 ml-1">/100</span>
+        <span className="rdi-number font-data-value text-3xl text-outline ml-1">/100</span>
       </motion.div>
 
       {/* Severity label */}
@@ -82,7 +81,7 @@ export default function RDIReveal({ score, animate = true }: RDIRevealProps) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 8 }}
         transition={{ delay: 0.8 }}
-        className="px-3 py-1 rounded-full text-xs font-semibold tracking-widest"
+        className="px-3 py-1 rounded-full font-data-label text-data-label tracking-widest"
         style={{
           background: `${color}20`,
           color,

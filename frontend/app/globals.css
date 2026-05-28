@@ -244,3 +244,22 @@ body {
 @layer utilities {
   .text-balance { text-wrap: balance; }
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   PRESENTATION MODE (Cmd+Shift+D on stage)
+   Hides demo labels, enlarges RDI scores, slows animations.
+   ════════════════════════════════════════════════════════════════════ */
+
+.presentation-mode .demo-data-label {
+  display: none !important;
+}
+
+.presentation-mode .rdi-number {
+  font-size: calc(1em * 1.2);
+}
+
+.presentation-mode .framer-motion-animate,
+.presentation-mode [class*="animate-"] {
+  animation-duration: 2s !important;
+  transition-duration: 0.5s !important;
+}

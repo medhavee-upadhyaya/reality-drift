@@ -19,7 +19,7 @@ export default function RDIBreakdown({ components }: RDIBreakdownProps) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-xs uppercase tracking-widest text-white/40 mb-4">
+      <h3 className="font-data-label text-data-label text-on-surface-variant uppercase tracking-widest mb-4">
         Score Breakdown
       </h3>
       {entries.map(([key, component], i) => {
@@ -33,16 +33,16 @@ export default function RDIBreakdown({ components }: RDIBreakdownProps) {
             transition={{ delay: i * 0.1 + 0.5 }}
             className="space-y-1"
           >
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-white/70">{meta.label}</span>
+            <div className="flex items-center justify-between">
+              <span className="font-data-label text-data-label text-on-surface-variant">{meta.label}</span>
               <div className="flex items-center gap-2">
-                <span className="text-white/30">{meta.weight}</span>
-                <span className="rdi-number font-medium" style={{ color }}>
+                <span className="font-data-label text-data-label text-outline">{meta.weight}</span>
+                <span className="rdi-number font-data-value tabular-nums" style={{ color }}>
                   {component.score}
                 </span>
               </div>
             </div>
-            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${component.score}%` }}

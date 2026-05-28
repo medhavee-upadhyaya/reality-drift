@@ -166,6 +166,48 @@ export const DRIFT_TYPE_COLORS: Record<DriftType, string> = {
   "Unknown": "#6b7280",
 };
 
+// ─── Compliance Mode Types ────────────────────────────────────────────────────
+
+export type AppMode = "outsider" | "compliance";
+
+export type ComplianceVerdict = "CLEAR" | "MINOR_DRIFT" | "CONFLICT";
+export type ComplianceRiskLevel = "LOW" | "MODERATE" | "HIGH";
+export type ConflictType = "regional_contradiction" | "regulatory_delta" | "omission" | "overcommitment";
+export type DimensionStatus = "CONSISTENT" | "VARIES" | "MISSING";
+export type ReadinessStatus = "LOW_RISK" | "MODERATE_RISK" | "HIGH_RISK";
+
+export interface ComplianceConflict {
+  type: ConflictType;
+  description: string;
+  conflicting_source: string;
+  specific_text: string;
+}
+
+export interface ComplianceCheckResult {
+  verdict: ComplianceVerdict;
+  risk_level: ComplianceRiskLevel;
+  conflicts: ComplianceConflict[];
+  recommendation: string;
+}
+
+export interface ReadinessDimension {
+  name: string;
+  status: DimensionStatus;
+  detail: string;
+}
+
+export interface RegulatoryReadinessResult {
+  overall_status: ReadinessStatus;
+  dimensions: ReadinessDimension[];
+  top_priority_action: string;
+}
+
+export interface RecommendedActionsResult {
+  urgent: string[];
+  this_week: string[];
+  next_quarter: string[];
+}
+
 export const REGION_COORDS: Record<string, [number, number]> = {
   US: [39.8283, -98.5795],
   DE: [51.1657, 10.4515],

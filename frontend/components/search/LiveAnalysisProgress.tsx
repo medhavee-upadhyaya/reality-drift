@@ -43,13 +43,13 @@ export default function LiveAnalysisProgress({
     <div className="space-y-6">
       {/* Progress bar */}
       <div className="space-y-2">
-        <div className="flex justify-between text-xs text-white/40">
+        <div className="flex justify-between font-data-label text-data-label text-on-surface-variant">
           <span>Analyzing...</span>
-          <span className="rdi-number">{progress}%</span>
+          <span className="rdi-number font-data-value tabular-nums">{progress}%</span>
         </div>
-        <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+        <div className="h-1 bg-surface-container rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-blue-500 to-red-500 rounded-full"
+            className="h-full bg-gradient-to-r from-primary to-tertiary rounded-full"
             animate={{ width: `${progress}%` }}
             transition={{ ease: "easeOut" }}
           />
@@ -69,23 +69,23 @@ export default function LiveAnalysisProgress({
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.05 }}
-              className={`flex items-center gap-3 text-sm transition-all duration-300 ${
+              className={`flex items-center gap-3 font-data-label text-data-label transition-all duration-300 ${
                 isCompleted
-                  ? "text-white/70"
+                  ? "text-on-surface-variant"
                   : isCurrent
-                  ? "text-white"
-                  : "text-white/20"
+                  ? "text-on-surface"
+                  : "text-outline"
               }`}
             >
               <span className="text-base w-5 text-center">
                 {isCompleted ? "✓" : isCurrent ? config.icon : "○"}
               </span>
-              <span className={isCurrent ? "font-medium" : ""}>{config.label}</span>
+              <span className={isCurrent ? "font-semibold" : ""}>{config.label}</span>
               {isCurrent && (
                 <motion.span
                   animate={{ opacity: [1, 0.3, 1] }}
                   transition={{ repeat: Infinity, duration: 1.2 }}
-                  className="ml-auto text-xs text-blue-400"
+                  className="ml-auto font-data-label text-data-label text-primary"
                 >
                   Running...
                 </motion.span>
@@ -103,7 +103,7 @@ export default function LiveAnalysisProgress({
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="text-xs text-white/30 italic"
+            className="font-data-label text-data-label text-outline italic"
           >
             {events[events.length - 1].message}
           </motion.div>

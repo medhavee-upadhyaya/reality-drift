@@ -26,15 +26,17 @@ export default function DriftDNA({ dna }: DriftDNAProps) {
           style={{ background: driftColor, boxShadow: `0 0 8px ${driftColor}` }}
         />
         <div>
-          <div className="text-xs text-white/40 uppercase tracking-widest">Dominant Drift Type</div>
-          <div className="text-sm font-semibold" style={{ color: driftColor }}>
+          <div className="font-data-label text-data-label text-on-surface-variant uppercase tracking-widest">
+            Dominant Drift Type
+          </div>
+          <div className="font-data-label text-data-label font-semibold" style={{ color: driftColor }}>
             {dna.dominant_drift_type}
           </div>
         </div>
       </div>
 
       {/* Separator */}
-      <div className="border-t border-white/5 mb-4" />
+      <div className="border-t border-outline-variant/20 mb-4" />
 
       {/* DNA bars */}
       <div className="space-y-3">
@@ -48,11 +50,11 @@ export default function DriftDNA({ dna }: DriftDNAProps) {
               transition={{ delay: i * 0.12 + 0.3 }}
               className="space-y-1"
             >
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-white/60">{label}</span>
-                <span className="rdi-number text-white/80">{value}%</span>
+              <div className="flex items-center justify-between">
+                <span className="font-data-label text-data-label text-on-surface-variant">{label}</span>
+                <span className="rdi-number font-data-value text-data-value text-on-surface tabular-nums">{value}%</span>
               </div>
-              <div className="h-2 bg-white/5 rounded-full overflow-hidden relative">
+              <div className="h-2 bg-surface-container rounded-full overflow-hidden relative">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${value}%` }}

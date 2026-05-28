@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import PresentationMode from "@/components/ui/PresentationMode";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} font-body-base antialiased`}
       >
         {children}
+        <PresentationMode />
       </body>
     </html>
   );

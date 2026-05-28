@@ -4,14 +4,14 @@
 
 ## ⚡ NEXT TASK (start here, no other reading needed)
 
-**Fill in `backend/.env` with real API keys, then test the live pipeline.**
+**Deploy to Railway (backend) + Vercel (frontend). CLIs are installed, just need logins.**
 
-1. Copy `backend/.env.example` → `backend/.env`, add real keys
-2. Start backend: `cd backend && source venv/bin/activate && uvicorn main:app --reload`
-3. Test: `POST /api/analyze` with a real company URL (not shell/nike/hm)
-4. Verify all 5 Bright Data products fire in the response's `bright_data_usage`
-5. Check Cognee: run same company twice → `temporal_history` should have 2 points
-6. Update `docs/PROJECT_STATE.md` → mark live pipeline test as ✅
+1. User runs `! railway login` → browser auth → then run `cd backend && railway deploy`
+2. User runs `! npx vercel login` → browser auth → then run `cd frontend && npx vercel --prod`
+3. After deploy: add `NEXT_PUBLIC_API_URL=<railway-url>` env var in Vercel dashboard
+4. Test both deployed URLs with Shell/Nike/H&M demo cards
+5. Internal Compliance Mode is built — demo at `/compliance/shell`, `/compliance/nike`, `/compliance/hm`
+6. Presentation Mode: `Cmd+Shift+D` on any dashboard page
 
 ---
 

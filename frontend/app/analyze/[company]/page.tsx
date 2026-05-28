@@ -18,6 +18,8 @@ import DriftTimeline from "@/components/timeline/DriftTimeline";
 import LiveAnalysisProgress from "@/components/search/LiveAnalysisProgress";
 import Navbar from "@/components/Navbar";
 import StatusBar from "@/components/StatusBar";
+import ModeNav from "@/components/ui/ModeNav";
+import RecommendedActions from "@/components/compliance/RecommendedActions";
 
 const REGIONS = ["US", "DE", "IN", "BR", "SG"] as const;
 const REGION_META: Record<string, { flag: string; label: string; icon: string; city: string }> = {
@@ -237,7 +239,19 @@ export default function AnalyzePage() {
         {/* ══════════════════════════════════════
             MAIN CONTENT — 12-col grid
             ══════════════════════════════════════ */}
-        <main className="flex-1 grid grid-cols-12 overflow-hidden">
+        <main className="flex-1 flex flex-col overflow-hidden">
+
+          {/* Mode switcher bar */}
+          <div className="flex-shrink-0 bg-background/90 backdrop-blur-md border-b border-outline-variant/10 px-4 py-2 flex items-center justify-between z-20">
+            <ModeNav company={companyParam} currentMode="outsider" />
+            {result.is_preloaded && (
+              <span className="demo-data-label font-data-label text-[9px] text-outline italic hidden sm:block">
+                Demo data — pre-loaded for presentation
+              </span>
+            )}
+          </div>
+
+        <div className="flex-1 grid grid-cols-12 overflow-hidden">
 
           {/* ── LEFT PANE: Regional drift pings (col 1–3) ── */}
           <div className="col-span-3 border-r border-outline-variant/10 flex flex-col p-4 gap-3 bg-surface-container-lowest/30 overflow-y-auto pb-10">
@@ -607,6 +621,12 @@ export default function AnalyzePage() {
                 )}
               </motion.div>
             )}
+          </div>
+        </div>
+
+          {/* Recommended Actions — full width below grid */}
+          <div className="flex-shrink-0 border-t border-outline-variant/10 px-4 py-4 bg-surface-container-lowest/30">
+            <RecommendedActions result={result} mode="outsider" />
           </div>
         </main>
       </div>

@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
-from api.routes import analyze, companies, history, health
+from api.routes import analyze, companies, history, health, compliance
 from memory.cognee_client import initialize_cognee
 
 
@@ -56,6 +56,7 @@ app.include_router(health.router, prefix="", tags=["Health"])
 app.include_router(companies.router, prefix="/api", tags=["Companies"])
 app.include_router(analyze.router, prefix="/api", tags=["Analysis"])
 app.include_router(history.router, prefix="/api", tags=["History"])
+app.include_router(compliance.router, prefix="/api", tags=["Compliance"])
 
 
 if __name__ == "__main__":

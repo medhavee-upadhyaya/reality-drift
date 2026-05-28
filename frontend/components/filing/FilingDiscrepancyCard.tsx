@@ -15,44 +15,44 @@ export default function FilingDiscrepancyCard({ filing }: FilingDiscrepancyCardP
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6 }}
-      className="rounded-xl border border-red-500/30 bg-red-500/5 overflow-hidden"
+      className="rounded-xl border border-tertiary/30 bg-tertiary/5 overflow-hidden"
     >
       {/* Header */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-red-500/20 bg-red-500/8">
-        <span className="text-red-400 text-lg">⚠</span>
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-tertiary/20 bg-tertiary/5">
+        <span className="material-symbols-outlined text-tertiary text-[18px]">warning</span>
         <div>
-          <div className="text-xs text-red-400 font-semibold uppercase tracking-widest">
+          <div className="font-data-label text-data-label text-tertiary uppercase tracking-widest">
             Regulatory Filing Discrepancy
           </div>
-          <div className="text-xs text-white/40">
+          <div className="font-data-label text-[10px] text-on-surface-variant">
             {filing.filing_type} filed {filing.filing_date}
           </div>
         </div>
         {filing.delta_numeric !== null && filing.delta_numeric !== undefined && (
           <div className="ml-auto text-right">
-            <div className="text-red-400 font-bold rdi-number text-lg">
+            <div className="text-tertiary font-bold rdi-number font-data-value text-[18px] tabular-nums">
               +{filing.delta_numeric}pp
             </div>
-            <div className="text-xs text-white/30">delta</div>
+            <div className="font-data-label text-[10px] text-outline">delta</div>
           </div>
         )}
       </div>
 
       {/* Two columns */}
-      <div className="grid grid-cols-2 divide-x divide-white/5">
+      <div className="grid grid-cols-2 divide-x divide-outline-variant/20">
         <div className="p-4">
-          <div className="text-xs text-white/30 uppercase tracking-wider mb-2">
+          <div className="font-data-label text-[10px] text-outline uppercase tracking-wider mb-2">
             Public Claim
           </div>
-          <p className="text-sm text-white leading-relaxed">
+          <p className="font-data-label text-[12px] text-on-surface leading-relaxed">
             &ldquo;{filing.public_claim}&rdquo;
           </p>
         </div>
         <div className="p-4">
-          <div className="text-xs text-red-400/70 uppercase tracking-wider mb-2">
+          <div className="font-data-label text-[10px] text-tertiary/70 uppercase tracking-wider mb-2">
             {filing.filing_type} Filed
           </div>
-          <p className="text-sm text-red-300/80 leading-relaxed">
+          <p className="font-data-label text-[12px] text-tertiary/80 leading-relaxed">
             &ldquo;{filing.sec_language}&rdquo;
           </p>
         </div>
@@ -60,8 +60,8 @@ export default function FilingDiscrepancyCard({ filing }: FilingDiscrepancyCardP
 
       {/* Delta description */}
       {filing.delta_description && (
-        <div className="px-4 py-3 border-t border-red-500/15 bg-red-500/5">
-          <p className="text-xs text-white/50">{filing.delta_description}</p>
+        <div className="px-4 py-3 border-t border-tertiary/15 bg-tertiary/5">
+          <p className="font-data-label text-[11px] text-on-surface-variant">{filing.delta_description}</p>
         </div>
       )}
     </motion.div>
