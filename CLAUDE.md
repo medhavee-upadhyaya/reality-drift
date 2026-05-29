@@ -4,14 +4,15 @@
 
 ## ⚡ NEXT TASK (start here, no other reading needed)
 
-**Deploy to Railway (backend) + Vercel (frontend). CLIs are installed, just need logins.**
+**🔴 CRITICAL: Fix ANTHROPIC_API_KEY first (401 error), then deploy. Deadline: May 30, 5PM Pacific.**
 
-1. User runs `! railway login` → browser auth → then run `cd backend && railway deploy`
-2. User runs `! npx vercel login` → browser auth → then run `cd frontend && npx vercel --prod`
-3. After deploy: add `NEXT_PUBLIC_API_URL=<railway-url>` env var in Vercel dashboard
-4. Test both deployed URLs with Shell/Nike/H&M demo cards
-5. Internal Compliance Mode is built — demo at `/compliance/shell`, `/compliance/nike`, `/compliance/hm`
-6. Presentation Mode: `Cmd+Shift+D` on any dashboard page
+1. **Fix API key**: Go to [console.anthropic.com](https://console.anthropic.com) → API Keys → Create new key → paste into `backend/.env` as `ANTHROPIC_API_KEY=sk-ant-...` AND `COGNEE_LLM_API_KEY=sk-ant-...`
+2. **Deploy backend**: User runs `! railway login` → browser auth → `cd backend && railway deploy` → note the Railway URL
+3. **Deploy frontend**: User runs `! npx vercel login` → browser auth → `cd frontend && npx vercel --prod`
+4. **Connect them**: In Vercel dashboard → Settings → Environment Variables → add `NEXT_PUBLIC_API_URL=<railway-url>`
+5. **Test + submit**: Open deployed frontend → click Shell/Nike/H&M → verify all panels render → submit on lablab.ai
+
+**While waiting for deploy**: `/compliance/shell`, `/compliance/nike`, `/compliance/hm` all work with intelligent company-specific fallbacks (no Claude needed for demo companies). Presentation mode: `Cmd+Shift+D`.
 
 ---
 

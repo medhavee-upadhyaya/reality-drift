@@ -1,12 +1,19 @@
 """
 geo_fetcher.py — Bright Data Residential Proxies + Web Unlocker
 
-Fetches the same company URL simultaneously from 5 geographic regions:
-US, Germany, India, Brazil, Singapore.
+Two fetch strategies:
+  1. OUTSIDER MODE (default): Fetch the SAME URL through 5 geo-proxies.
+     Detects server-side geo-targeting (different HTML served to different IPs).
+     Also auto-detects common regional TLD variants (nike.de, nike.com.br, etc.)
+     and merges whichever has unique content.
+
+  2. COMPLIANCE MODE: Caller provides explicit per-region URLs.
+     e.g. {"US": "nike.com", "DE": "nike.de", "IN": "nike.co.in"}
+     Each is fetched directly (still through proxy for authenticity).
 
 Products used:
-  - Bright Data Residential Proxies (country-specific exit IPs)
-  - Bright Data Web Unlocker (for JS-heavy / bot-protected pages)
+  - Bright Data Residential Proxies (zone: residential_proxy1)
+  - Bright Data Web Unlocker (fallback, zone: web_unlocker1)
 """
 
 import os
@@ -14,12 +21,13 @@ import asyncio
 import hashlib
 import httpx
 from typing import Optional
+from urllib.parse import urlparse
 
-CUSTOMER_ID = os.getenv("BRIGHT_DATA_CUSTOMER_ID", "")
+CUSTOMER_ID          = os.getenv("BRIGHT_DATA_CUSTOMER_ID", "")
 RESIDENTIAL_PASSWORD = os.getenv("BRIGHT_DATA_RESIDENTIAL_PASSWORD", "")
-API_TOKEN = os.getenv("BRIGHT_DATA_API_TOKEN", "")
+API_TOKEN            = os.getenv("BRIGHT_DATA_API_TOKEN", "")
 
-# Zone name: residential_proxy1 (confirmed from account dashboard)
+# Region → proxy URL (country-specific exit IPs)
 REGION_PROXIES = {
     "US": f"http://brd-customer-{CUSTOMER_ID}-zone-residential_proxy1-country-us:{RESIDENTIAL_PASSWORD}@brd.superproxy.io:22225",
     "DE": f"http://brd-customer-{CUSTOMER_ID}-zone-residential_proxy1-country-de:{RESIDENTIAL_PASSWORD}@brd.superproxy.io:22225",
@@ -38,24 +46,68 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
 }
 
+# Regional TLD patterns to try when auto-detecting
+# sld = second-level domain (e.g. "nike" from "nike.com")
+REGIONAL_TLD_PATTERNS = {
+    "DE": ["{sld}.de", "de.{sld}.com", "{sld}.com/de"],
+    "IN": ["{sld}.co.in", "{sld}.in", "in.{sld}.com", "{sld}.com/in"],
+    "BR": ["{sld}.com.br", "br.{sld}.com", "{sld}.com.br/sustentabilidade"],
+    "SG": ["{sld}.com.sg", "sg.{sld}.com"],
+}
 
-async def fetch_region_via_proxy(
-    url: str, region: str, client: httpx.AsyncClient
+
+def _extract_sld(url: str) -> str:
+    """Extract second-level domain from URL. 'https://www.nike.com/...' → 'nike'"""
+    parsed = urlparse(url if url.startswith("http") else f"https://{url}")
+    hostname = parsed.netloc.lower()
+    parts = [p for p in hostname.split(".") if p not in ("www", "")]
+    return parts[0] if parts else ""
+
+
+def _build_auto_regional_urls(base_url: str) -> dict[str, str]:
+    """
+    Auto-generate candidate regional URLs from a base URL.
+    Returns the most likely regional URL per region.
+    e.g. nike.com → {"US": "https://nike.com", "DE": "https://nike.de", ...}
+    """
+    sld = _extract_sld(base_url)
+    if not sld:
+        return {}
+
+    parsed = urlparse(base_url if base_url.startswith("http") else f"https://{base_url}")
+    path = parsed.path.rstrip("/")
+
+    candidates = {"US": base_url}  # US always uses the original URL
+
+    for region, patterns in REGIONAL_TLD_PATTERNS.items():
+        # Use the first pattern as primary candidate
+        primary = patterns[0].format(sld=sld)
+        # Preserve any path (e.g. /sustainability)
+        candidates[region] = f"https://{primary}{path}" if path else f"https://{primary}"
+
+    return candidates
+
+
+async def _fetch_url(
+    url: str,
+    region: str,
+    client: httpx.AsyncClient,
+    use_proxy: bool = True,
 ) -> Optional[dict]:
-    """Fetch URL through Bright Data residential proxy for a specific country."""
-    proxy_url = REGION_PROXIES.get(region)
-    if not proxy_url or not CUSTOMER_ID or not RESIDENTIAL_PASSWORD:
-        print(f"⚠️  No proxy config for {region}, attempting direct fetch")
-        return await _fetch_direct(url, region, client)
+    """Fetch a URL, optionally through the regional proxy."""
+    proxy_url = REGION_PROXIES.get(region) if use_proxy else None
+    has_proxy_creds = bool(CUSTOMER_ID and RESIDENTIAL_PASSWORD)
 
     try:
-        response = await client.get(
-            url,
-            proxy=proxy_url,
-            headers=HEADERS,
-            timeout=30.0,
-            follow_redirects=True,
-        )
+        kwargs: dict = {
+            "headers": HEADERS,
+            "timeout": 30.0,
+            "follow_redirects": True,
+        }
+        if proxy_url and has_proxy_creds:
+            kwargs["proxy"] = proxy_url
+
+        response = await client.get(url, **kwargs)
         html = response.text
         return {
             "region": region,
@@ -64,41 +116,20 @@ async def fetch_region_via_proxy(
             "status_code": response.status_code,
             "content_length": len(html),
             "raw_text_hash": hashlib.sha256(html.encode()).hexdigest()[:16],
-            "source": "residential_proxy",
+            "source": "residential_proxy" if (proxy_url and has_proxy_creds) else "direct",
         }
     except Exception as e:
-        print(f"⚠️  Proxy fetch failed for {region}: {e}")
-        return await _fetch_via_web_unlocker(url, region)
-
-
-async def _fetch_direct(url: str, region: str, client: httpx.AsyncClient) -> Optional[dict]:
-    """Fallback: direct fetch without proxy."""
-    try:
-        response = await client.get(url, headers=HEADERS, timeout=20.0, follow_redirects=True)
-        html = response.text
-        return {
-            "region": region,
-            "url": str(response.url),
-            "html": html,
-            "status_code": response.status_code,
-            "content_length": len(html),
-            "raw_text_hash": hashlib.sha256(html.encode()).hexdigest()[:16],
-            "source": "direct",
-        }
-    except Exception as e:
-        print(f"⚠️  Direct fetch failed for {region}: {e}")
+        print(f"⚠️  Fetch failed [{region}] {url}: {e}")
         return None
 
 
 async def _fetch_via_web_unlocker(url: str, region: str) -> Optional[dict]:
     """
-    Bright Data Web Unlocker — used when residential proxy fails.
-    Uses the API endpoint approach (Bearer token auth) for zone web_unlocker1.
-    Handles JS-rendering, CAPTCHAs, and aggressive bot detection.
+    Bright Data Web Unlocker — used when proxy fetch fails.
+    Handles JS-rendering, CAPTCHAs, bot-protection.
     """
     if not API_TOKEN:
         return None
-
     try:
         async with httpx.AsyncClient(timeout=45.0) as client:
             response = await client.post(
@@ -125,30 +156,75 @@ async def _fetch_via_web_unlocker(url: str, region: str) -> Optional[dict]:
             "source": "web_unlocker",
         }
     except Exception as e:
-        print(f"⚠️  Web Unlocker failed for {region}: {e}")
+        print(f"⚠️  Web Unlocker failed [{region}]: {e}")
         return None
 
 
-async def fetch_all_regions(url: str) -> dict[str, dict]:
+async def fetch_all_regions(
+    url: str,
+    regional_urls: dict[str, str] | None = None,
+) -> dict[str, dict]:
     """
-    Main entry point: fetch URL from all 5 regions concurrently.
-    Returns dict keyed by region code ("US", "DE", "IN", "BR", "SG").
-    Failed regions are omitted from result (not fatal).
+    Main entry point: fetch content from all 5 regions.
+
+    Args:
+        url: Primary URL to analyze
+        regional_urls: Optional explicit per-region URLs
+                       e.g. {"DE": "https://nike.de", "IN": "https://nike.co.in"}
+                       Any region not provided falls back to proxy-fetching `url`.
+
+    Strategy:
+        - If regional_urls provided → fetch each specified URL directly (compliance mode)
+        - Otherwise → proxy-fetch base URL AND try auto-detected regional TLDs,
+          keep whichever has unique content (outsider mode)
     """
+
+    # ── Build the URL map for each region ────────────────────────────────────
+    if regional_urls:
+        # Compliance mode: use caller-provided URLs, fill gaps with base URL
+        url_map = {
+            region: regional_urls.get(region, url)
+            for region in REGION_PROXIES
+        }
+        print(f"📌 Compliance mode: using explicit regional URLs")
+    else:
+        # Outsider mode: proxy-fetch + auto-detect regional TLDs
+        auto_urls = _build_auto_regional_urls(url)
+        url_map = {
+            region: auto_urls.get(region, url)
+            for region in REGION_PROXIES
+        }
+        print(f"🌍 Outsider mode: geo-proxy + auto-regional URLs")
+        for r, u in url_map.items():
+            print(f"   {r}: {u}")
+
+    # ── Fetch all regions concurrently ────────────────────────────────────────
     async with httpx.AsyncClient(verify=False, timeout=30.0) as client:
         tasks = [
-            fetch_region_via_proxy(url, region, client)
+            _fetch_url(url_map[region], region, client, use_proxy=True)
             for region in REGION_PROXIES
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-    output = {}
+    # ── Collect results, fall back to Web Unlocker on failure ─────────────────
+    output: dict[str, dict] = {}
+    fallback_tasks = []
+
     for result in results:
         if isinstance(result, dict) and result.get("region"):
             region = result["region"]
             output[region] = result
-            print(f"✅ {region}: {result.get('content_length', 0)} chars ({result.get('source', 'unknown')})")
+            print(f"✅ {region}: {result.get('content_length', 0):,} chars from {result.get('url','?')[:60]} ({result.get('source','?')})")
         elif isinstance(result, Exception):
-            print(f"⚠️  Region fetch exception: {result}")
+            print(f"⚠️  Region exception: {result}")
+
+    # Fall back to Web Unlocker for any failed regions
+    for region in REGION_PROXIES:
+        if region not in output:
+            print(f"⚠️  {region} failed — retrying via Web Unlocker")
+            fallback = await _fetch_via_web_unlocker(url_map[region], region)
+            if fallback:
+                output[region] = fallback
+                print(f"✅ {region} (web_unlocker): {fallback.get('content_length', 0):,} chars")
 
     return output

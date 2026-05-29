@@ -159,6 +159,7 @@ class AnalyzeRequest(BaseModel):
     url: str
     company_name: str
     force_live: bool = False              # Override preloaded cache
+    regional_urls: Optional[Dict[str, str]] = None  # e.g. {"DE": "nike.de", "IN": "nike.co.in"}
 
 
 class CompanySummary(BaseModel):

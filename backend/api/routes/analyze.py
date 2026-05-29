@@ -88,10 +88,15 @@ async def _run_full_pipeline(
     company_name: str,
     analysis_id: str,
     progress_callback=None,
+    regional_urls: dict | None = None,
 ) -> AnalysisResult:
     """
     Execute the full Reality Drift analysis pipeline.
     Calls progress_callback(step, pct, message) after each layer.
+
+    regional_urls: Optional per-region URLs for compliance mode
+                   e.g. {"DE": "https://nike.de", "IN": "https://nike.co.in"}
+                   If None, auto-detects regional TLD variants.
     """
 
     async def _progress(step: AnalysisStep, pct: int, msg: str):
@@ -99,9 +104,14 @@ async def _run_full_pipeline(
             await progress_callback(step, pct, msg)
 
     # ── Layer 1: Geo Fetch (Bright Data Residential Proxies) ─────────────────
-    await _progress(AnalysisStep.GEO_FETCH, 10, "Fetching page from 5 geographic regions...")
+    region_msg = (
+        "Fetching explicit regional domains..."
+        if regional_urls
+        else "Fetching page from 5 geographic regions + auto-detecting regional TLDs..."
+    )
+    await _progress(AnalysisStep.GEO_FETCH, 10, region_msg)
     try:
-        regional_html = await fetch_all_regions(url)
+        regional_html = await fetch_all_regions(url, regional_urls=regional_urls)
     except Exception as e:
         regional_html = {}
         print(f"⚠️  Geo fetch partial failure: {e}")
@@ -301,6 +311,7 @@ async def analyze_company(request: AnalyzeRequest):
         url=request.url,
         company_name=request.company_name,
         analysis_id=analysis_id,
+        regional_urls=request.regional_urls,
     )
 
     # Cache result
@@ -311,7 +322,7 @@ async def analyze_company(request: AnalyzeRequest):
 # ─── GET /api/analyze/stream ──────────────────────────────────────────────────
 
 @router.get("/analyze/stream")
-async def analyze_stream(url: str, company_name: str, force_live: bool = False):
+async def analyze_stream(url: str, company_name: str, force_live: bool = False, regional_urls: str = ""):
     """
     SSE streaming endpoint for live analysis progress.
     Emits ProgressEvent JSON objects as each pipeline step completes.
@@ -345,9 +356,18 @@ async def analyze_stream(url: str, company_name: str, force_live: bool = False):
             evt = ProgressEvent(step=step, progress=pct, message=msg)
             await progress_events.put(evt)
 
+        # Parse regional_urls from query param (JSON string) if provided
+        import json as _json
+        parsed_regional_urls = None
+        if regional_urls:
+            try:
+                parsed_regional_urls = _json.loads(regional_urls)
+            except Exception:
+                pass
+
         # Run pipeline in background
         pipeline_task = asyncio.create_task(
-            _run_full_pipeline(url, company_name, analysis_id, on_progress)
+            _run_full_pipeline(url, company_name, analysis_id, on_progress, regional_urls=parsed_regional_urls)
         )
 
         # Stream events as they arrive

@@ -63,29 +63,19 @@ export default function LandingPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.2 }}
         >
-          {/* Atmospheric glow */}
-          <div className="absolute inset-0 bg-primary/5 rounded-full blur-[80px] animate-pulse-slow pointer-events-none" />
 
-          {/* Globe ring — outer slow spin */}
-          <div className="absolute inset-[10%] border border-primary/20 rounded-full animate-spin-slow pointer-events-none" />
-          {/* Globe ring — inner reverse spin */}
-          <div className="absolute inset-[20%] border border-on-surface-variant/10 rounded-full animate-spin-slow-rev pointer-events-none" />
 
           {/* Globe core */}
-          <div className="relative w-[280px] h-[280px] md:w-[420px] md:h-[420px] rounded-full overflow-hidden border border-outline-variant/20 shadow-2xl bg-sc-lowest">
+          <div className="relative w-[320px] h-[320px] md:w-[500px] md:h-[500px]">
             {/* Scan line */}
             <div className="scan-line" />
 
-            {/* Globe fill — gradient that evokes a world map */}
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background: `
-                  radial-gradient(circle at 30% 40%, rgb(var(--color-primary) / 0.15) 0%, transparent 50%),
-                  radial-gradient(circle at 70% 60%, rgb(var(--color-tertiary-container) / 0.1) 0%, transparent 40%),
-                  radial-gradient(circle at 50% 50%, rgb(var(--color-sc-low)) 0%, rgb(var(--color-background)) 100%)
-                `,
-              }}
+            {/* Globe image */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/globe.png"
+              alt="Earth"
+              className="absolute inset-0 w-full h-full object-cover rounded-full"
             />
 
             {/* SVG animated drift pings */}
@@ -134,6 +124,11 @@ export default function LandingPage() {
               <line x1="80" y1="10" x2="80" y2="90" stroke="rgb(var(--color-primary))" strokeWidth="0.1" opacity="0.1" />
             </svg>
           </div>
+
+          {/* Globe ring — outer slow spin (z-10 = in front of globe image) */}
+          <div className="absolute inset-[10%] border border-primary/20 rounded-full animate-spin-slow pointer-events-none z-10" />
+          {/* Globe ring — inner reverse spin */}
+          <div className="absolute inset-[20%] border border-on-surface-variant/10 rounded-full animate-spin-slow-rev pointer-events-none z-10" />
 
           {/* Float card — left: EU cluster */}
           <div className="absolute left-0 top-1/4 glass-panel p-sm rounded-xl w-48 border-l-2 border-primary hidden lg:block">
