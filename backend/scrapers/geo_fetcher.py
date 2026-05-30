@@ -206,24 +206,38 @@ async def fetch_all_regions(
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-    # ── Collect results, fall back to Web Unlocker on failure ─────────────────
+    # ── Collect results, fall back to Web Unlocker on failure or thin content ───
     output: dict[str, dict] = {}
-    fallback_tasks = []
+
+    # Minimum content threshold — JS-shell pages are typically < 5KB of useful text
+    JS_SHELL_THRESHOLD = 5000
 
     for result in results:
         if isinstance(result, dict) and result.get("region"):
             region = result["region"]
+            content_len = result.get("content_length", 0)
             output[region] = result
-            print(f"✅ {region}: {result.get('content_length', 0):,} chars from {result.get('url','?')[:60]} ({result.get('source','?')})")
+            if content_len < JS_SHELL_THRESHOLD:
+                print(f"⚠️  {region}: only {content_len:,} chars — likely JS-shell, will retry via Web Unlocker")
+            else:
+                print(f"✅ {region}: {content_len:,} chars from {result.get('url','?')[:60]} ({result.get('source','?')})")
         elif isinstance(result, Exception):
             print(f"⚠️  Region exception: {result}")
 
-    # Fall back to Web Unlocker for any failed regions
+    # Fall back to Web Unlocker for:
+    #   a) regions that completely failed
+    #   b) regions that returned thin JS-shell pages (< 5KB)
     for region in REGION_PROXIES:
-        if region not in output:
-            print(f"⚠️  {region} failed — retrying via Web Unlocker")
+        current = output.get(region)
+        needs_fallback = (
+            current is None or
+            current.get("content_length", 0) < JS_SHELL_THRESHOLD
+        )
+        if needs_fallback:
+            reason = "failed" if current is None else f"thin content ({current.get('content_length',0):,} chars)"
+            print(f"⚠️  {region} {reason} — retrying via Web Unlocker")
             fallback = await _fetch_via_web_unlocker(url_map[region], region)
-            if fallback:
+            if fallback and fallback.get("content_length", 0) > (current or {}).get("content_length", 0):
                 output[region] = fallback
                 print(f"✅ {region} (web_unlocker): {fallback.get('content_length', 0):,} chars")
 

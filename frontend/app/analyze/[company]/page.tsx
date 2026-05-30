@@ -284,7 +284,7 @@ export default function AnalyzePage() {
                       {meta.flag} {region} [{meta.city}]
                     </span>
                     <span className="font-data-value text-[10px] text-on-surface-variant">
-                      {hasData ? `${pct}%` : "NO DATA"}
+                      {hasData ? `${pct}%` : page?.word_count ? "NO ESG CLAIMS" : "UNREACHABLE"}
                     </span>
                   </div>
                   <div className="h-1 bg-surface-container-highest rounded-full overflow-hidden">
