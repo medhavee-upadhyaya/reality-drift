@@ -299,17 +299,7 @@ Reality Drift/
 └── CLAUDE.md                        ← AI assistant context (project state + rules)
 ```
 
----
 
-## Prize Targets
-
-| Prize | Requirement | How We Meet It |
-|-------|-------------|----------------|
-| 🏆 **Bright Data AI Startup ($20K)** | All 5 Bright Data products visibly used | 5 products in Data Sources panel, each in its own scraper file, all clearly labelled |
-| 🧠 **Cognee Partner Prize ($2,900)** | Meaningful use of Cognee memory | DriftTimeline shows 4-point temporal history; escalation scoring uses stored history |
-| 📈 **Finance & Market Intelligence** | SEC filing as alternative data source | FilingDiscrepancyCard: Shell 30% vs 20% SEC 20-F, 10pp numeric delta, severity HIGH |
-
----
 
 ## Key Technical Decisions
 
