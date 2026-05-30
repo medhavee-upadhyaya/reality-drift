@@ -176,20 +176,24 @@ export default function CompliancePage() {
           {/* Quick nav */}
           <nav className="flex-1 overflow-y-auto py-2">
             {[
-              { icon: "dashboard",   label: "Overview"           },
-              { icon: "table_chart", label: "Regional Breakdown" },
-              { icon: "edit_note",   label: "Pre-Publish Check"  },
-              { icon: "shield",      label: "Reg. Readiness"     },
-              { icon: "notifications", label: "Alert Settings"   },
-              { icon: "history",     label: "Drift History"      },
+              { icon: "dashboard",     label: "Overview",          section: "section-overview"  },
+              { icon: "table_chart",   label: "Regional Breakdown", section: "section-regional"  },
+              { icon: "edit_note",     label: "Pre-Publish Check",  section: "section-checker"   },
+              { icon: "shield",        label: "Reg. Readiness",     section: "section-readiness" },
+              { icon: "notifications", label: "Alert Settings",     section: "section-alerts"    },
+              { icon: "history",       label: "Drift History",      section: "section-history"   },
             ].map((item, i) => (
-              <div
+              <button
                 key={i}
+                onClick={() => {
+                  const el = document.getElementById(item.section);
+                  el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
                 className="w-full text-left px-4 py-2.5 flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 transition-all cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[16px]">{item.icon}</span>
                 <span className="font-data-label text-data-label uppercase">{item.label}</span>
-              </div>
+              </button>
             ))}
           </nav>
 
@@ -246,6 +250,7 @@ export default function CompliancePage() {
 
             {/* ── Panel 1: Narrative Consistency Overview ── */}
             <motion.div
+              id="section-overview"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -292,6 +297,7 @@ export default function CompliancePage() {
 
             {/* ── Panel 2: Regional Team Breakdown ── */}
             <motion.div
+              id="section-regional"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -301,6 +307,7 @@ export default function CompliancePage() {
 
             {/* ── Panel 3: Pre-Publish Checker (most important) ── */}
             <motion.div
+              id="section-checker"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -309,7 +316,7 @@ export default function CompliancePage() {
             </motion.div>
 
             {/* ── Two-col: Regulatory Readiness + Alert Settings ── */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="section-readiness" className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -319,6 +326,7 @@ export default function CompliancePage() {
               </motion.div>
 
               <motion.div
+                id="section-alerts"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.45 }}
@@ -353,6 +361,7 @@ export default function CompliancePage() {
             {/* ── Cognee Timeline (reframed) ── */}
             {result.temporal_history && result.temporal_history.length >= 2 && (
               <motion.div
+                id="section-history"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.55 }}

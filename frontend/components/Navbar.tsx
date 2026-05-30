@@ -46,17 +46,16 @@ export default function Navbar({ onSearch }: NavbarProps) {
 
         <nav className="hidden md:flex gap-lg ml-lg items-center">
           {[
-            { label: "Dashboard", href: "/" },
-            { label: "Global Map", href: "#" },
-            { label: "Archives", href: "#" },
-            { label: "Protocols", href: "#" },
-          ].map(({ label, href }) => {
-            const active = href === "/" ? isLanding : false;
+            { label: "Dashboard",  action: () => router.push("/")                  },
+            { label: "Global Map", action: () => router.push("/")                  },
+            { label: "Archives",   action: () => router.push("/analyze/shell")     },
+            { label: "Protocols",  action: () => router.push("/compliance/shell")  },
+          ].map(({ label, action }) => {
+            const active = label === "Dashboard" && isLanding;
             return (
-              <a
+              <button
                 key={label}
-                href={href}
-                onClick={href === "/" ? (e) => { e.preventDefault(); router.push("/"); } : undefined}
+                onClick={action}
                 className={`text-body-base font-medium pb-1 transition-colors duration-150 ${
                   active
                     ? "text-primary border-b-2 border-primary font-bold"
@@ -64,7 +63,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
                 }`}
               >
                 {label}
-              </a>
+              </button>
             );
           })}
         </nav>
@@ -90,10 +89,20 @@ export default function Navbar({ onSearch }: NavbarProps) {
           </form>
         )}
 
-        <button className="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all">
+        <button
+          onClick={() => router.push("/compliance/shell")}
+          title="Active drift alerts"
+          className="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all relative"
+        >
           <span className="material-symbols-outlined text-[20px]">notifications</span>
+          {/* Active alert dot */}
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-tertiary border border-background" />
         </button>
-        <button className="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all">
+        <button
+          onClick={() => router.push("/")}
+          title="Command Center"
+          className="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+        >
           <span className="material-symbols-outlined text-[20px]">settings</span>
         </button>
 

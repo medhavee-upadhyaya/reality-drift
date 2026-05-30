@@ -228,26 +228,27 @@ export default function LandingPage() {
             </AnimatePresence>
           </form>
 
-          {/* Recent suggestions */}
+          {/* Quick demo suggestions */}
           <div className="flex justify-center gap-md mt-sm">
             <span className="font-data-label text-[10px] text-on-surface-variant uppercase">
-              {mode === "compliance" ? "Demo:" : "Recent:"}
+              Demo:
             </span>
-            {(mode === "compliance"
-              ? ["shell.com", "nike.com", "hm.com"]
-              : ["tesla.com", "google.ai", "reuters.com"]
-            ).map((s) => (
+            {[
+              { label: "shell.com",  slug: "shell" },
+              { label: "nike.com",   slug: "nike"  },
+              { label: "hm.com",     slug: "hm"    },
+            ].map(({ label, slug }) => (
               <button
-                key={s}
+                key={slug}
                 onClick={() => {
                   const dest = mode === "compliance"
-                    ? `/compliance/${encodeURIComponent(s.split(".")[0])}`
-                    : `/analyze/${encodeURIComponent(s)}`;
+                    ? `/compliance/${slug}`
+                    : `/analyze/${slug}`;
                   router.push(dest);
                 }}
                 className="font-data-label text-[10px] text-primary/70 hover:text-primary transition-colors underline decoration-primary/30"
               >
-                {s}
+                {label}
               </button>
             ))}
           </div>
