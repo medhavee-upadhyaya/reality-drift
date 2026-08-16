@@ -34,6 +34,9 @@ jobs:
       - name: Compile application source
         working-directory: backend
         run: python -m compileall -q api ai data memory scoring scrapers utils main.py
+      - name: Run backend unit tests
+        working-directory: backend
+        run: python -m unittest discover -s tests -v
       - name: Validate bundled demo data
         working-directory: backend
         run: |

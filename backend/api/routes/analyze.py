@@ -43,6 +43,7 @@ from ai.claim_extractor import extract_claims
 from ai.contradiction_finder import find_contradictions
 from ai.drift_classifier import classify_drift
 from ai.sec_comparator import compare_sec_filing
+from ai.geographic_similarity import compare_regional_narratives
 
 # Scoring
 from scoring.rdi_calculator import compute_rdi
@@ -157,7 +158,11 @@ async def _run_full_pipeline(
 
     # 5a. Extract claims per region
     claims_result = await extract_claims(regional_text, company_name)
-    await _progress(AnalysisStep.CLAUDE_ANALYZE, 62, "Detecting contradictions and evidence mismatches...")
+    await _progress(AnalysisStep.CLAUDE_ANALYZE, 60, "Comparing regional narratives semantically...")
+
+    # Measure the content itself instead of inferring drift from fetch count.
+    regional_similarity = await compare_regional_narratives(regional_text, company_name)
+    await _progress(AnalysisStep.CLAUDE_ANALYZE, 64, "Detecting contradictions and evidence mismatches...")
 
     # 5b. Build evidence text
     evidence_text = f"SEC Filing:\n{sec_text}\n\nNews:\n" + "\n".join(
@@ -192,13 +197,8 @@ async def _run_full_pipeline(
     # ── Layer 6: Scoring ──────────────────────────────────────────────────────
     await _progress(AnalysisStep.SCORING, 85, "Computing Reality Drift Index...")
 
-    # Build geographic similarity proxy from region count
+    # Geographic similarity is computed from pairwise narrative content.
     regions_fetched = len(regional_text)
-    similarity_score = max(0.2, 1.0 - (regions_fetched * 0.12))  # Rough proxy
-    regional_similarity = {
-        "mean_similarity": similarity_score,
-        "max_variation": 1.0 - similarity_score,
-    }
 
     total_claims = sum(len(c) for c in claims_result.values())
     history_for_scoring = []  # Will be fetched from Cognee after first store
