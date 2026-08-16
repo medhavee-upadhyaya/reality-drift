@@ -18,13 +18,36 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Reality Drift — The Internet Shows Different Truths to Different People",
+  metadataBase: new URL("https://reality-drift-rho.vercel.app"),
+  title: {
+    default: "Reality Drift — Narrative Drift Intelligence",
+    template: "%s · Reality Drift",
+  },
   description:
-    "AI observability infrastructure for detecting regional narrative drift in corporate ESG claims.",
+    "Detect regional contradictions in corporate ESG claims with an explainable Reality Drift Index and source-level receipts.",
+  keywords: [
+    "ESG",
+    "greenwashing detection",
+    "narrative drift",
+    "corporate accountability",
+    "OSINT",
+    "compliance",
+  ],
+  authors: [{ name: "Medhavee Upadhyaya" }],
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Reality Drift",
-    description: "The Internet Shows Different Truths to Different People",
+    title: "Reality Drift — The Internet Shows Different Truths to Different People",
+    description: "Compare corporate claims across regions, filings, and evidence. See every contradiction and how it affects the score.",
+    url: "/",
+    siteName: "Reality Drift",
+    images: [{ url: "/social-preview.jpg", width: 1280, height: 720, alt: "Reality Drift evidence dashboard" }],
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Reality Drift — Narrative Drift Intelligence",
+    description: "Different claims, different regions, one evidence-first audit.",
+    images: ["/social-preview.jpg"],
   },
 };
 

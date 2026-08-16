@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile application source
+        working-directory: backend
+        run: python -m compileall -q api ai data memory scoring scrapers utils main.py
+      - name: Validate bundled demo data
+        working-directory: backend
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          files = list(Path("data/preloaded").glob("*.json"))
+          assert files, "No preloaded demo records found"
+          for path in files:
+              data = json.loads(path.read_text())
+              assert data["company"]
+              assert 0 <= data["rdi_score"] <= 100
+          print(f"Validated {len(files)} demo records")
+          PY

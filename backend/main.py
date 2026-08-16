@@ -38,17 +38,25 @@ app = FastAPI(
 )
 
 # ─── CORS ───────────────────────────────────────────────────────────────────────
-allowed_origins = os.getenv(
+# Explicit origins from env var (comma-separated)
+allowed_origins_raw = os.getenv(
     "ALLOWED_ORIGINS",
-    "http://localhost:3000,http://localhost:3001,https://reality-drift.vercel.app"
-).split(",")
+    "http://localhost:3000,http://localhost:3001"
+)
+allowed_origins = [o.strip() for o in allowed_origins_raw.split(",") if o.strip()]
+
+# Regex covers any Vercel preview/production subdomain automatically
+# e.g. reality-drift-rho.vercel.app, reality-drift.vercel.app, etc.
+allow_origin_regex = r"https://.*\.vercel\.app"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o.strip() for o in allowed_origins],
+    allow_origins=allowed_origins,
+    allow_origin_regex=allow_origin_regex,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # ─── Routes ─────────────────────────────────────────────────────────────────────
