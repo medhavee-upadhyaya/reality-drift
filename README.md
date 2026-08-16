@@ -6,7 +6,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/medhavee-upadhyaya/reality-drift/ci.yml?branch=main&style=for-the-badge&label=build)](https://github.com/medhavee-upadhyaya/reality-drift/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-white?style=for-the-badge)](LICENSE)
 
-Reality Drift is an open-source narrative observability platform. It compares corporate sustainability claims across countries, regulatory filings, news, and employee signals, then turns the inconsistencies into an explainable **Reality Drift Index (RDI)** with source-level receipts.
+Reality Drift is an open-source narrative observability platform. It compares corporate sustainability claims across countries, regulatory filings, news, and employee signals, then turns the inconsistencies into an explainable **Reality Drift Index (RDI)** with source-level receipts, independent evidence verification, and knowledge-graph memory.
 
 **[Try the live demo](https://reality-drift-rho.vercel.app)** — choose Shell, Nike, or H&M for an instant, API-key-free analysis.
 
@@ -47,7 +47,10 @@ flowchart LR
   E --> F
   F --> G["RDI scoring engine"]
   G --> H["Evidence dashboard"]
-  G --> I["Temporal memory"]
+  G --> I["Cognee graph memory"]
+  I -->|"GraphRAG retrieval"| F
+  F --> J["Evidence verifier"]
+  J --> G
 ```
 
 The score is deliberately inspectable:
@@ -59,14 +62,17 @@ RDI = geographic drift × 0.30
     + disclosure gap × 0.15
 ```
 
-See [the scoring methodology](docs/SCORING.md) and [architecture notes](docs/ARCHITECTURE.md) for the assumptions and implementation details.
+See [the scoring methodology](docs/SCORING.md), [AI system design](docs/AI_SYSTEM.md), and [architecture notes](docs/ARCHITECTURE.md) for the assumptions and implementation details.
 
 ## Product surfaces
 
 - **Outsider View** — evidence-first analysis for researchers, journalists, investors, and procurement teams.
 - **Internal Compliance** — pre-publish claim checks, regional ownership, readiness scoring, and remediation actions.
 - **Presentation Mode** — press `Cmd/Ctrl + Shift + D` on a dashboard to remove demo labels for a clean walkthrough.
-- **Live analysis** — a seven-stage streaming pipeline with visible progress instead of a black-box loading screen.
+- **Live analysis** — an eight-stage streaming pipeline with visible progress instead of a black-box loading screen.
+- **Independent verification** — every proposed contradiction can be verified, disputed, or marked as insufficient evidence.
+- **GraphRAG memory** — relevant prior analyses are retrieved before current reasoning while current sources remain the required proof.
+- **Traceable provenance** — source URLs, retrieval times, and SHA-256 evidence hashes make findings reproducible.
 
 ## Stack
 
@@ -76,7 +82,7 @@ See [the scoring methodology](docs/SCORING.md) and [architecture notes](docs/ARC
 | API | FastAPI, Pydantic, Server-Sent Events |
 | Reasoning | Claude claim extraction, comparison, and classification pipeline |
 | Collection | Bright Data regional proxies, Web Unlocker, SERP, Scraping Browser, Web Scraper API |
-| Memory | Cognee temporal knowledge graph |
+| Memory | Cognee knowledge graph + GraphRAG retrieval |
 | Deployment | Vercel + Railway |
 
 ## Run locally

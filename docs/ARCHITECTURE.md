@@ -1,13 +1,15 @@
 # Architecture — Reality Drift
 
+> The current AI reasoning, GraphRAG, provenance, and verification boundaries are documented in [AI_SYSTEM.md](AI_SYSTEM.md).
+
 ## Tech Stack
 
 | Layer | Technology | Why |
 |-------|-----------|-----|
 | Frontend | Next.js 14 (App Router) + Tailwind + Framer Motion | Dark-mode animated dashboard |
-| Backend | FastAPI (Python 3.14) | Async scraping, Python AI ecosystem |
+| Backend | FastAPI (Python 3.12+) | Async scraping, Python AI ecosystem |
 | AI | Claude Sonnet 4.6 (`claude-sonnet-4-6`) | Prompt caching = 90% token savings |
-| Memory | Cognee 1.1.0 | Temporal drift storage, graph + vector |
+| Memory | Cognee 1.1.0 | GraphRAG retrieval, temporal drift, graph + vector |
 | Scraping | Bright Data (5 products) | Geographic proxies, SEC bypass, Glassdoor |
 | Deploy | Vercel (frontend) + Railway (backend) | Free tier, fast |
 

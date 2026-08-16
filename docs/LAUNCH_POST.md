@@ -19,6 +19,10 @@ Reality Drift turns that mess into an evidence-first narrative audit:
 → compares claims across five regions  
 → checks public language against regulatory filings  
 → finds contradictions and disclosure gaps  
+→ independently verifies each proposed finding
+
+→ retrieves relevant history through knowledge-graph RAG
+
 → tracks whether drift is getting worse over time  
 → produces an explainable 0–100 Reality Drift Index
 
@@ -26,6 +30,8 @@ The Shell demo is the clearest example: a public 30% reduction claim appears bes
 
 Try the instant demo: https://reality-drift-rho.vercel.app  
 Explore the code: https://github.com/medhavee-upadhyaya/reality-drift
+
+Under the hood it combines Claude reasoning, cross-regional web collection, deterministic scoring, evidence hashes, and Cognee GraphRAG memory. Historical model output is context—not proof—so every current finding still needs current evidence.
 
 The project is open source. I would especially value feedback from climate-tech builders, investigative researchers, compliance teams, and anyone working on explainable AI systems.
 
