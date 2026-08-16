@@ -33,6 +33,7 @@ export interface RegionalPage {
   claims: string[];
   tone: string;
   word_count?: number;
+  retrieved_at?: string;
 }
 
 export interface Contradiction {
@@ -42,6 +43,11 @@ export interface Contradiction {
   contradiction_type: ContradictionType;
   severity: ContradictionSeverity;
   region_source: string;
+  evidence_url?: string;
+  evidence_date?: string;
+  retrieved_at?: string;
+  evidence_hash?: string;
+  confidence?: number;
 }
 
 export interface SECFiling {

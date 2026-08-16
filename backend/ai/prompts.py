@@ -77,6 +77,8 @@ OUTPUT FORMAT — valid JSON array only:
     "claim": "exact claim text from the regional pages",
     "evidence_source": "source name and date (e.g., 'SEC 20-F 2023, p.47' or 'Reuters 2024-03-12')",
     "evidence_text": "exact contradicting text from the evidence",
+    "evidence_url": "exact SOURCE_URL supplied with the evidence, or null",
+    "evidence_date": "publication or filing date supplied with the evidence, or null",
     "contradiction_type": "quantitative_delta|omission|tone_reversal|temporal_inconsistency",
     "severity": "high|medium|low",
     "region_source": "US|DE|IN|BR|SG"
@@ -87,6 +89,11 @@ SEVERITY GUIDE:
 - high: Different numbers reported to regulators vs consumers, or public denial of documented violations
 - medium: Significant omission of material information, or misleading framing that could affect decisions
 - low: Minor tone inconsistency or soft omission of non-material information
+
+CITATION RULES:
+- Copy evidence_url only from a SOURCE_URL explicitly present in the supplied evidence
+- Never invent, reconstruct, or guess a URL
+- evidence_text must be an exact quote, not a paraphrase
 
 CONTRADICTION TYPES:
 - quantitative_delta: Claim states a specific number that differs from regulatory filing number

@@ -30,6 +30,7 @@ from data.schemas import (
 )
 from utils.cache import get_cached_analysis, set_cached_analysis
 from utils.text_processing import extract_text_from_html
+from utils.provenance import content_hash, enrich_contradiction
 
 # Scrapers (Bright Data)
 from scrapers.geo_fetcher import fetch_all_regions
@@ -165,9 +166,17 @@ async def _run_full_pipeline(
     await _progress(AnalysisStep.CLAUDE_ANALYZE, 64, "Detecting contradictions and evidence mismatches...")
 
     # 5b. Build evidence text
-    evidence_text = f"SEC Filing:\n{sec_text}\n\nNews:\n" + "\n".join(
-        f"- {n.get('title', n.get('headline', ''))}: {n.get('snippet', '')}"
+    sec_url = next((item.get("url") for item in sec_serp if item.get("url")), None)
+    evidence_text = (
+        f"SEC Filing:\nSOURCE_URL: {sec_url or 'unavailable'}\n{sec_text}\n\nNews:\n"
+        + "\n".join(
+        f"- {n.get('title', n.get('headline', ''))}\n"
+        f"  SOURCE: {n.get('source', 'Unknown')}\n"
+        f"  SOURCE_DATE: {n.get('date', 'Unknown')}\n"
+        f"  SOURCE_URL: {n.get('url', n.get('link', 'unavailable'))}\n"
+        f"  EXCERPT: {n.get('snippet', '')}"
         for n in raw_news[:10]
+        )
     )
 
     # 5c. Find contradictions
@@ -179,6 +188,16 @@ async def _run_full_pipeline(
     contradictions_result = await find_contradictions(
         all_claims_text, evidence_text, company_name
     )
+    retrieved_at = datetime.now(timezone.utc).isoformat()
+    contradictions_result = [
+        enrich_contradiction(
+            finding,
+            sec_url=sec_url,
+            news_items=raw_news,
+            retrieved_at=retrieved_at,
+        )
+        for finding in contradictions_result
+    ]
     await _progress(AnalysisStep.CLAUDE_ANALYZE, 70, "Classifying drift type and computing DNA fingerprint...")
 
     # 5d. Classify drift
@@ -223,6 +242,8 @@ async def _run_full_pipeline(
             claims=claims_result.get(region, []),
             tone="regulatory" if region == "DE" else "aspirational",
             word_count=len(data.get("html", "").split()),
+            raw_text_hash=content_hash(regional_text.get(region, "")),
+            retrieved_at=retrieved_at,
         )
         for region, data in regional_html.items()
         if isinstance(data, dict)

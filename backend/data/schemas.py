@@ -54,6 +54,7 @@ class RegionalPage(BaseModel):
     claims: List[str] = Field(default_factory=list)
     tone: str = "neutral"                # "aspirational" | "regulatory" | "partnership" | etc.
     word_count: Optional[int] = None
+    retrieved_at: Optional[str] = None
 
 
 class Contradiction(BaseModel):
@@ -63,6 +64,11 @@ class Contradiction(BaseModel):
     contradiction_type: ContradictionType = ContradictionType.OMISSION
     severity: ContradictionSeverity = ContradictionSeverity.MEDIUM
     region_source: str = "US"            # Which region the claim came from
+    evidence_url: Optional[str] = None
+    evidence_date: Optional[str] = None
+    retrieved_at: Optional[str] = None
+    evidence_hash: Optional[str] = None
+    confidence: Optional[float] = Field(default=None, ge=0, le=1)
 
 
 class SECFiling(BaseModel):

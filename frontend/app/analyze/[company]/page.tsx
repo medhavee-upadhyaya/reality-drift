@@ -473,9 +473,20 @@ export default function AnalyzePage() {
                       &ldquo;{c.claim}&rdquo;
                     </p>
                     <div className="flex justify-between items-center">
-                      <span className="font-data-label text-[10px] text-on-surface-variant uppercase">
-                        {c.evidence_source}
-                      </span>
+                      {c.evidence_url ? (
+                        <a
+                          href={c.evidence_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-data-label text-[10px] text-primary uppercase hover:underline"
+                        >
+                          {c.evidence_source} ↗
+                        </a>
+                      ) : (
+                        <span className="font-data-label text-[10px] text-on-surface-variant uppercase">
+                          {c.evidence_source}
+                        </span>
+                      )}
                       <span className={`font-data-label text-[10px] uppercase ${i === 0 ? "text-primary/70" : "text-tertiary/70"}`}>
                         {i === 0 ? "VERIFIED" : "CONTRADICTION"}
                       </span>
