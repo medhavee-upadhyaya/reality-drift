@@ -45,6 +45,7 @@ from ai.contradiction_finder import find_contradictions
 from ai.drift_classifier import classify_drift
 from ai.sec_comparator import compare_sec_filing
 from ai.geographic_similarity import compare_regional_narratives
+from ai.evidence_verifier import verify_findings
 
 # Scoring
 from scoring.rdi_calculator import compute_rdi
@@ -198,11 +199,16 @@ async def _run_full_pipeline(
         )
         for finding in contradictions_result
     ]
-    await _progress(AnalysisStep.CLAUDE_ANALYZE, 70, "Classifying drift type and computing DNA fingerprint...")
+    await _progress(AnalysisStep.EVIDENCE_VERIFY, 70, "Independently verifying citations and conclusions...")
+    contradictions_result = await verify_findings(
+        contradictions_result, evidence_text, company_name
+    )
+    await _progress(AnalysisStep.EVIDENCE_VERIFY, 74, "Evidence verification complete")
+    await _progress(AnalysisStep.CLAUDE_ANALYZE, 76, "Classifying drift type and computing DNA fingerprint...")
 
     # 5d. Classify drift
     drift_result = await classify_drift(regional_text, contradictions_result, company_name)
-    await _progress(AnalysisStep.CLAUDE_ANALYZE, 77, "Comparing public claims against regulatory filings...")
+    await _progress(AnalysisStep.CLAUDE_ANALYZE, 80, "Comparing public claims against regulatory filings...")
 
     # 5e. Compare SEC
     most_prominent_claim = ""
@@ -211,7 +217,7 @@ async def _run_full_pipeline(
     sec_comparison = await compare_sec_filing(
         most_prominent_claim, sec_text, company_name
     )
-    await _progress(AnalysisStep.CLAUDE_ANALYZE, 83, "AI analysis complete")
+    await _progress(AnalysisStep.CLAUDE_ANALYZE, 84, "AI analysis complete")
 
     # ── Layer 6: Scoring ──────────────────────────────────────────────────────
     await _progress(AnalysisStep.SCORING, 85, "Computing Reality Drift Index...")

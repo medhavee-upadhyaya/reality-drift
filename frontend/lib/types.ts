@@ -21,6 +21,7 @@ export type AnalysisStep =
   | "news_scrape"
   | "glassdoor_scrape"
   | "claude_analyze"
+  | "evidence_verify"
   | "scoring"
   | "cognee_store"
   | "done"
@@ -48,6 +49,8 @@ export interface Contradiction {
   retrieved_at?: string;
   evidence_hash?: string;
   confidence?: number;
+  verification_status?: "verified" | "disputed" | "insufficient_evidence";
+  verification_reason?: string;
 }
 
 export interface SECFiling {

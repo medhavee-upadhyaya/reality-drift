@@ -487,8 +487,10 @@ export default function AnalyzePage() {
                           {c.evidence_source}
                         </span>
                       )}
-                      <span className={`font-data-label text-[10px] uppercase ${i === 0 ? "text-primary/70" : "text-tertiary/70"}`}>
-                        {i === 0 ? "VERIFIED" : "CONTRADICTION"}
+                      <span className={`font-data-label text-[10px] uppercase ${c.verification_status === "verified" ? "text-primary/70" : "text-tertiary/70"}`}>
+                        {c.verification_status === "verified"
+                          ? `VERIFIED ${c.confidence ? `${Math.round(c.confidence * 100)}%` : ""}`
+                          : c.verification_status?.replace("_", " ") || "UNVERIFIED"}
                       </span>
                     </div>
                   </div>

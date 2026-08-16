@@ -4,7 +4,7 @@ All Pydantic models used across backend AND mirrored as TypeScript types in fron
 """
 
 from __future__ import annotations
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List, Any, Literal
 from pydantic import BaseModel, Field
 from datetime import datetime
 from enum import Enum
@@ -39,6 +39,7 @@ class AnalysisStep(str, Enum):
     NEWS_SCRAPE = "news_scrape"
     GLASSDOOR_SCRAPE = "glassdoor_scrape"
     CLAUDE_ANALYZE = "claude_analyze"
+    EVIDENCE_VERIFY = "evidence_verify"
     SCORING = "scoring"
     COGNEE_STORE = "cognee_store"
     DONE = "done"
@@ -69,6 +70,8 @@ class Contradiction(BaseModel):
     retrieved_at: Optional[str] = None
     evidence_hash: Optional[str] = None
     confidence: Optional[float] = Field(default=None, ge=0, le=1)
+    verification_status: Optional[Literal["verified", "disputed", "insufficient_evidence"]] = None
+    verification_reason: Optional[str] = None
 
 
 class SECFiling(BaseModel):

@@ -183,4 +183,27 @@ SIMILARITY SCALE:
 Compute mean_similarity as the average of all 10 pairwise values.
 Compute max_variation as (1.0 - minimum pairwise value).
 """,
+
+    "verify_evidence": """
+TASK: Independently audit every proposed contradiction against COLLECTED_EVIDENCE.
+
+OUTPUT FORMAT — valid JSON array only:
+[
+  {
+    "finding_index": 0,
+    "status": "verified|disputed|insufficient_evidence",
+    "confidence": 0.0-1.0,
+    "reason": "short evidence-based explanation"
+  }
+]
+
+VERIFICATION RULES:
+- verified: the cited passage exists in the supplied evidence and directly supports the stated contradiction
+- disputed: the supplied evidence conflicts with or materially weakens the proposed conclusion
+- insufficient_evidence: the quote, source, or logical connection cannot be confirmed
+- Treat an omission as verified only when the supplied material supports both the documented fact and the claimed comparison scope
+- Check numeric deltas independently
+- Do not reward confident wording; evaluate only supplied evidence
+- Return one verdict for every finding_index and never add new findings
+""",
 }
