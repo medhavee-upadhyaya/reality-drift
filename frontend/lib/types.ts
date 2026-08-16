@@ -116,6 +116,14 @@ export interface BrightDataUsage {
   web_scraper_api?: { datasets: number; product: string; target: string };
 }
 
+export interface MemoryRetrieval {
+  provider: string;
+  strategy: "graph_rag";
+  records_retrieved: number;
+  context_used: boolean;
+  query?: string;
+}
+
 export interface AnalysisResult {
   company: string;
   url: string;
@@ -132,6 +140,7 @@ export interface AnalysisResult {
   drift_dna: DriftDNA;
   temporal_history: TemporalPoint[];
   bright_data_usage?: BrightDataUsage;
+  memory_retrieval?: MemoryRetrieval;
 }
 
 export interface CompanySummary {

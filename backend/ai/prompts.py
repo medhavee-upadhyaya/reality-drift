@@ -39,6 +39,7 @@ CRITICAL RULES:
 - All severity values must be exactly "high", "medium", or "low".
 - Quote exact text from source materials when citing evidence.
 - Do not hallucinate company facts not present in the provided content.
+- Historical graph memory is context, not primary proof. A current finding still requires evidence from the current collected sources.
 
 You are analyzing corporate ESG claims to build the Reality Drift Index (RDI) — a quantitative measure of how differently companies communicate sustainability claims across geographic regions versus what they report to regulators. This analysis serves institutional investors, regulatory bodies, and enterprise procurement teams.
 

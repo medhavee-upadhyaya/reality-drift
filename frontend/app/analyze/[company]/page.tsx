@@ -537,9 +537,19 @@ export default function AnalyzePage() {
           <div className="col-span-3 border-l border-outline-variant/10 flex flex-col p-4 bg-surface-container-lowest/30 overflow-y-auto pb-10">
 
             {/* AI Reasoning stream header */}
-            <h3 className="font-data-label text-data-label uppercase text-on-surface-variant mb-4">
-              AI Analysis Stream
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-data-label text-data-label uppercase text-on-surface-variant">
+                AI Analysis Stream
+              </h3>
+              {result.memory_retrieval?.context_used && (
+                <span
+                  title="Prior graph evidence was retrieved and supplied to the current analysis"
+                  className="font-data-label text-[9px] text-primary uppercase border border-primary/30 rounded px-1.5 py-0.5"
+                >
+                  GraphRAG · {result.memory_retrieval.records_retrieved}
+                </span>
+              )}
+            </div>
 
             {/* Stream log — show contradictions as "detections" */}
             <div className="space-y-3 mb-6">

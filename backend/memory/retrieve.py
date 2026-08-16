@@ -9,6 +9,57 @@ from data.schemas import TemporalPoint
 from memory.cognee_client import ensure_initialized
 
 
+def format_retrieved_context(results: list, max_chars: int = 6000) -> str:
+    """Create a bounded, clearly delimited context block from graph results."""
+    blocks = []
+    total = 0
+    for index, result in enumerate(results, 1):
+        text = " ".join(str(result).split())
+        if not text:
+            continue
+        block = f"[MEMORY {index}] {text}"
+        if total + len(block) > max_chars:
+            remaining = max_chars - total
+            if remaining > 80:
+                blocks.append(block[:remaining])
+            break
+        blocks.append(block)
+        total += len(block)
+    return "\n".join(blocks)
+
+
+async def get_relevant_analysis_context(
+    company_name: str, current_narrative: str, limit: int = 5
+) -> tuple[str, int, str]:
+    """Retrieve prior graph evidence for use in the current LLM analysis."""
+    try:
+        await ensure_initialized()
+        import cognee
+    except Exception as exc:
+        print(f"⚠️  Cognee context retrieval unavailable: {exc}")
+        return "", 0, ""
+
+    company_id = company_name.lower().replace(" ", "_").replace("&", "and")
+    dataset_name = f"company_{company_id}"
+    narrative_terms = " ".join(current_narrative.split())[:800]
+    query = (
+        f"Prior claims, contradictions, evidence, and Reality Drift analyses for "
+        f"{company_name}. Compare with the current narrative: {narrative_terms}"
+    )
+    try:
+        results = await cognee.search(
+            query_text=query,
+            query_type="GRAPH_COMPLETION",
+            datasets=[dataset_name],
+        )
+    except Exception as exc:
+        print(f"⚠️  Cognee context search failed for {company_name}: {exc}")
+        return "", 0, query
+
+    selected = list(results[:limit])
+    return format_retrieved_context(selected), len(selected), query
+
+
 async def get_temporal_history(company_name: str, limit: int = 20) -> list[TemporalPoint]:
     """
     Query Cognee for all past RDI analyses for a company.

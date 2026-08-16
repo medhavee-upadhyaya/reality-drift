@@ -137,6 +137,14 @@ class BrightDataUsage(BaseModel):
     web_scraper_api: Optional[Dict[str, Any]] = None
 
 
+class MemoryRetrieval(BaseModel):
+    provider: str = "Cognee"
+    strategy: str = "graph_rag"
+    records_retrieved: int = 0
+    context_used: bool = False
+    query: Optional[str] = None
+
+
 # ─── Main AnalysisResult ────────────────────────────────────────────────────────
 
 class AnalysisResult(BaseModel):
@@ -160,6 +168,7 @@ class AnalysisResult(BaseModel):
     temporal_history: List[TemporalPoint] = Field(default_factory=list)
 
     bright_data_usage: Optional[BrightDataUsage] = None
+    memory_retrieval: Optional[MemoryRetrieval] = None
 
 
 # ─── Request/Response models ────────────────────────────────────────────────────

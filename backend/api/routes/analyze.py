@@ -26,7 +26,7 @@ from sse_starlette.sse import EventSourceResponse
 
 from data.schemas import (
     AnalyzeRequest, AnalysisResult, ProgressEvent, AnalysisStep,
-    BrightDataUsage, RDIComponents, RDIComponent
+    BrightDataUsage, RDIComponents, RDIComponent, MemoryRetrieval
 )
 from utils.cache import get_cached_analysis, set_cached_analysis
 from utils.text_processing import extract_text_from_html
@@ -53,7 +53,7 @@ from scoring.dna_fingerprint import compute_drift_dna
 
 # Memory
 from memory.store import store_analysis
-from memory.retrieve import get_temporal_history
+from memory.retrieve import get_temporal_history, get_relevant_analysis_context
 
 router = APIRouter()
 
@@ -158,6 +158,27 @@ async def _run_full_pipeline(
         if isinstance(data, dict) and data.get("html")
     }
 
+    # GraphRAG: retrieve relevant institutional memory before current reasoning.
+    historical_context = ""
+    prior_history = []
+    memory_count = 0
+    memory_query = ""
+    try:
+        narrative_preview = "\n".join(regional_text.values())
+        historical_context, memory_count, memory_query = await get_relevant_analysis_context(
+            company_name, narrative_preview
+        )
+        prior_history = await get_temporal_history(company_name)
+    except Exception as exc:
+        print(f"⚠️  Historical context unavailable: {exc}")
+
+    reasoning_context = dict(regional_text)
+    if historical_context:
+        reasoning_context["HISTORICAL_GRAPH_CONTEXT"] = (
+            "Historical memory for comparison only; verify every current finding "
+            f"against current evidence:\n{historical_context}"
+        )
+
     # 5a. Extract claims per region
     claims_result = await extract_claims(regional_text, company_name)
     await _progress(AnalysisStep.CLAUDE_ANALYZE, 60, "Comparing regional narratives semantically...")
@@ -187,7 +208,7 @@ async def _run_full_pipeline(
         for c in claims
     )
     contradictions_result = await find_contradictions(
-        all_claims_text, evidence_text, company_name
+        all_claims_text, evidence_text, company_name, regional_text=reasoning_context
     )
     retrieved_at = datetime.now(timezone.utc).isoformat()
     contradictions_result = [
@@ -207,7 +228,7 @@ async def _run_full_pipeline(
     await _progress(AnalysisStep.CLAUDE_ANALYZE, 76, "Classifying drift type and computing DNA fingerprint...")
 
     # 5d. Classify drift
-    drift_result = await classify_drift(regional_text, contradictions_result, company_name)
+    drift_result = await classify_drift(reasoning_context, contradictions_result, company_name)
     await _progress(AnalysisStep.CLAUDE_ANALYZE, 80, "Comparing public claims against regulatory filings...")
 
     # 5e. Compare SEC
@@ -215,7 +236,7 @@ async def _run_full_pipeline(
     if claims_result.get("US"):
         most_prominent_claim = claims_result["US"][0]
     sec_comparison = await compare_sec_filing(
-        most_prominent_claim, sec_text, company_name
+        most_prominent_claim, sec_text, company_name, regional_text=reasoning_context
     )
     await _progress(AnalysisStep.CLAUDE_ANALYZE, 84, "AI analysis complete")
 
@@ -226,7 +247,7 @@ async def _run_full_pipeline(
     regions_fetched = len(regional_text)
 
     total_claims = sum(len(c) for c in claims_result.values())
-    history_for_scoring = []  # Will be fetched from Cognee after first store
+    history_for_scoring = [point.model_dump() for point in prior_history]
 
     rdi_data = await compute_rdi(
         regional_similarity=regional_similarity,
@@ -291,6 +312,11 @@ async def _run_full_pipeline(
             serp_api={"queries_run": 2, "product": "SERP API"},
             scraping_browser={"sessions": 1 if glassdoor else 0, "product": "Scraping Browser"},
             web_scraper_api={"datasets": 1, "product": "Web Scraper API"},
+        ),
+        memory_retrieval=MemoryRetrieval(
+            records_retrieved=memory_count,
+            context_used=bool(historical_context),
+            query=memory_query or None,
         ),
     )
     await _progress(AnalysisStep.SCORING, 90, "Reality Drift Index computed")
