@@ -78,6 +78,8 @@ See [the scoring methodology](docs/SCORING.md), [AI system design](docs/AI_SYSTE
 - **Protocols** — inspect safeguards and experiment with RDI weights without changing production scoring.
 - **Alerts and Settings** — persist monitoring thresholds and workspace preferences in the browser.
 
+![Reality Drift global narrative map](docs/screenshots/global-map.jpg)
+
 ## Stack
 
 | Layer | Technology |
