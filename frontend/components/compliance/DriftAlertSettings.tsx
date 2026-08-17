@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ALERTS_KEY, getAlertPreferences } from "@/lib/workspace";
 
 export default function DriftAlertSettings() {
   const [threshold, setThreshold] = useState(60);
@@ -9,7 +10,15 @@ export default function DriftAlertSettings() {
   const [frequency, setFrequency] = useState<"daily" | "weekly" | "monthly">("weekly");
   const [saved, setSaved] = useState(false);
 
+  useEffect(() => {
+    const preferences = getAlertPreferences();
+    setThreshold(preferences.threshold);
+    setChannel(preferences.channel);
+    setFrequency(preferences.frequency);
+  }, []);
+
   const handleSave = () => {
+    localStorage.setItem(ALERTS_KEY, JSON.stringify({ threshold, channel, frequency, enabled: true }));
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };

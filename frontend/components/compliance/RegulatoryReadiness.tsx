@@ -167,9 +167,9 @@ export default function RegulatoryReadiness({ result }: RegulatoryReadinessProps
           </p>
         </div>
 
-        {/* Export button (UI only) */}
+        {/* Browser print produces a PDF through the native Save as PDF flow. */}
         <button
-          onClick={() => alert("PDF export would generate a full regulatory readiness report. Feature active in production deployment.")}
+          onClick={() => window.print()}
           className="w-full flex items-center justify-center gap-2 py-2 rounded-xl glass-panel font-data-label text-data-label uppercase text-on-surface-variant hover:text-primary hover:border-primary/30 transition-all"
         >
           <span className="material-symbols-outlined text-[16px]">download</span>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   AnalysisResult, ProgressEvent, AnalysisStep,
@@ -9,6 +9,7 @@ import {
 } from "@/lib/types";
 import { getCompany, streamAnalysis } from "@/lib/api";
 import { getPreloadedSlug, getPreloadedResult } from "@/lib/preloaded";
+import { saveAnalysisToArchive } from "@/lib/workspace";
 
 import RDIReveal from "@/components/rdi/RDIReveal";
 import RDIBreakdown from "@/components/rdi/RDIBreakdown";
@@ -28,6 +29,7 @@ import RecommendedActions from "@/components/compliance/RecommendedActions";
 export default function CompliancePage() {
   const params       = useParams();
   const router       = useRouter();
+  const searchParams = useSearchParams();
   const companyParam = decodeURIComponent(params.company as string);
 
   const [result,         setResult]         = useState<AnalysisResult | null>(null);
@@ -39,12 +41,20 @@ export default function CompliancePage() {
   const [isLive,         setIsLive]         = useState(false);
 
   useEffect(() => { loadAnalysis(); }, [companyParam]);
+  useEffect(() => {
+    if (result) saveAnalysisToArchive(result, getPreloadedSlug(companyParam) || companyParam);
+  }, [result, companyParam]);
 
   async function loadAnalysis() {
     setLoading(true);
     setError(null);
     setResult(null);
     setProgressEvents([]);
+    let regionalUrls: Record<string, string> | undefined;
+    try {
+      const encoded = searchParams.get("regional_urls");
+      regionalUrls = encoded ? JSON.parse(encoded) : undefined;
+    } catch {}
 
     const slug = getPreloadedSlug(companyParam);
     if (slug) {
@@ -78,6 +88,7 @@ export default function CompliancePage() {
         }
       },
       (err) => { setError(err.message); setLoading(false); },
+      regionalUrls,
     );
     return cleanup;
   }

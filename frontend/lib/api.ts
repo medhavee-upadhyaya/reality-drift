@@ -66,12 +66,16 @@ export function streamAnalysis(
   url: string,
   companyName: string,
   onProgress: (event: ProgressEvent) => void,
-  onError?: (error: Error) => void
+  onError?: (error: Error) => void,
+  regionalUrls?: Record<string, string>
 ): () => void {
   const params = new URLSearchParams({
     url,
     company_name: companyName,
   });
+  if (regionalUrls && Object.keys(regionalUrls).length) {
+    params.set("regional_urls", JSON.stringify(regionalUrls));
+  }
 
   const eventSource = new EventSource(
     `${API_URL}/api/analyze/stream?${params.toString()}`

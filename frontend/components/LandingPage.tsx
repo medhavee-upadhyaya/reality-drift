@@ -21,6 +21,13 @@ export default function LandingPage() {
     const dest = mode === "compliance"
       ? `/compliance/${encodeURIComponent(input.trim())}`
       : `/analyze/${encodeURIComponent(input.trim())}`;
+    if (mode === "compliance" && regionalDomains.trim()) {
+      const values = regionalDomains.split(",").map((value) => value.trim()).filter(Boolean);
+      const regionCodes = ["DE", "IN", "BR", "SG"];
+      const regionalUrls = Object.fromEntries(values.map((value, index) => [regionCodes[index] || `R${index + 1}`, value.startsWith("http") ? value : `https://${value}`]));
+      router.push(`${dest}?regional_urls=${encodeURIComponent(JSON.stringify(regionalUrls))}`);
+      return;
+    }
     router.push(dest);
   };
 

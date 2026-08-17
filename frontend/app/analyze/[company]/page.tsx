@@ -9,6 +9,7 @@ import {
 } from "@/lib/types";
 import { getCompany, streamAnalysis } from "@/lib/api";
 import { getPreloadedSlug, getPreloadedResult } from "@/lib/preloaded";
+import { saveAnalysisToArchive } from "@/lib/workspace";
 
 import RDIReveal from "@/components/rdi/RDIReveal";
 import RDIBreakdown from "@/components/rdi/RDIBreakdown";
@@ -45,6 +46,9 @@ export default function AnalyzePage() {
   const [activeRegion,   setActiveRegion]   = useState<string>("US");
 
   useEffect(() => { loadAnalysis(); }, [companyParam]);
+  useEffect(() => {
+    if (result) saveAnalysisToArchive(result, getPreloadedSlug(companyParam) || companyParam);
+  }, [result, companyParam]);
 
   async function loadAnalysis() {
     setLoading(true);
