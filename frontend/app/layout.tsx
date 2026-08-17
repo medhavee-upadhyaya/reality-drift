@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import PresentationMode from "@/components/ui/PresentationMode";
+import WorkspacePreferences from "@/components/ui/WorkspacePreferences";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -68,6 +69,7 @@ export default function RootLayout({
       >
         {children}
         <PresentationMode />
+        <WorkspacePreferences />
       </body>
     </html>
   );

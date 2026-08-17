@@ -97,6 +97,11 @@ body {
   color: rgb(var(--color-primary));
 }
 
+/* Workspace density preference */
+.compact-mode .glass-panel { border-radius: 0.55rem; }
+.compact-mode main .space-y-6 { gap: 0.85rem; }
+.compact-mode main .p-6 { padding: 1rem; }
+
 /* ════════════════════════════════════════════════════════════════════
    STITCH COMPONENT CLASSES
    ════════════════════════════════════════════════════════════════════ */

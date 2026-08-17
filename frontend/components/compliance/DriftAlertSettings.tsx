@@ -116,7 +116,7 @@ export default function DriftAlertSettings() {
               className="flex items-center gap-2 font-data-label text-[11px] text-green-400"
             >
               <span className="material-symbols-outlined text-[14px]">check_circle</span>
-              Alert settings saved. You will be notified when drift exceeds {threshold}.
+              Alert rule saved. The alerts workspace now uses threshold {threshold}.
             </motion.div>
           )}
         </AnimatePresence>

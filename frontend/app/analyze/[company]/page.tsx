@@ -9,7 +9,7 @@ import {
 } from "@/lib/types";
 import { getCompany, streamAnalysis } from "@/lib/api";
 import { getPreloadedSlug, getPreloadedResult } from "@/lib/preloaded";
-import { saveAnalysisToArchive } from "@/lib/workspace";
+import { getWorkspacePreferences, saveAnalysisToArchive } from "@/lib/workspace";
 
 import RDIReveal from "@/components/rdi/RDIReveal";
 import RDIBreakdown from "@/components/rdi/RDIBreakdown";
@@ -248,7 +248,7 @@ export default function AnalyzePage() {
           {/* Mode switcher bar */}
           <div className="flex-shrink-0 bg-background/90 backdrop-blur-md border-b border-outline-variant/10 px-4 py-2 flex items-center justify-between z-20">
             <ModeNav company={companyParam} currentMode="outsider" />
-            {result.is_preloaded && (
+            {result.is_preloaded && getWorkspacePreferences().showDemoLabels && (
               <span className="demo-data-label font-data-label text-[9px] text-outline italic hidden sm:block">
                 Demo data — pre-loaded for presentation
               </span>

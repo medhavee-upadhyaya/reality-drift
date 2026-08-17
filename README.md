@@ -73,6 +73,10 @@ See [the scoring methodology](docs/SCORING.md), [AI system design](docs/AI_SYSTE
 - **Independent verification** — every proposed contradiction can be verified, disputed, or marked as insufficient evidence.
 - **GraphRAG memory** — relevant prior analyses are retrieved before current reasoning while current sources remain the required proof.
 - **Traceable provenance** — source URLs, retrieval times, and SHA-256 evidence hashes make findings reproducible.
+- **Global Map** — interactively isolate monitored regions and open company intelligence files.
+- **Archives** — retain opened analyses locally with search and risk sorting.
+- **Protocols** — inspect safeguards and experiment with RDI weights without changing production scoring.
+- **Alerts and Settings** — persist monitoring thresholds and workspace preferences in the browser.
 
 ## Stack
 
@@ -134,6 +138,19 @@ docs/                 Architecture, API, scoring, integration, and deploy notes
 docs/screenshots/     Current product screenshots used by this README
 DEMO_SCRIPT.md        Five-minute walkthrough
 ```
+
+### Application routes
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Command center and analysis entry |
+| `/map` | Global regional intelligence map |
+| `/archives` | Searchable local analysis history |
+| `/protocols` | Methodology and RDI weight simulator |
+| `/alerts` | Monitoring rules and triggered demo alerts |
+| `/settings` | Persistent workspace preferences |
+| `/analyze/{company}` | Outsider evidence dashboard |
+| `/compliance/{company}` | Internal compliance workflow |
 
 ## Contributing
 

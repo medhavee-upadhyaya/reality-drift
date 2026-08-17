@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { DEMO_COMPANIES } from "@/lib/preloaded";
@@ -8,12 +8,17 @@ import { AppMode } from "@/lib/types";
 import Navbar from "@/components/Navbar";
 import StatusBar from "@/components/StatusBar";
 import ModeToggle from "@/components/ui/ModeToggle";
+import { getWorkspacePreferences } from "@/lib/workspace";
 
 export default function LandingPage() {
   const router = useRouter();
   const [input, setInput] = useState("");
   const [regionalDomains, setRegionalDomains] = useState("");
   const [mode, setMode] = useState<AppMode>("outsider");
+
+  useEffect(() => {
+    setMode(getWorkspacePreferences().defaultMode);
+  }, []);
 
   const handleAnalyze = (e: React.FormEvent) => {
     e.preventDefault();

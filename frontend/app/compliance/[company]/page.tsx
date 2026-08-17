@@ -9,7 +9,7 @@ import {
 } from "@/lib/types";
 import { getCompany, streamAnalysis } from "@/lib/api";
 import { getPreloadedSlug, getPreloadedResult } from "@/lib/preloaded";
-import { saveAnalysisToArchive } from "@/lib/workspace";
+import { getWorkspacePreferences, saveAnalysisToArchive } from "@/lib/workspace";
 
 import RDIReveal from "@/components/rdi/RDIReveal";
 import RDIBreakdown from "@/components/rdi/RDIBreakdown";
@@ -249,7 +249,7 @@ export default function CompliancePage() {
           </div>
 
           {/* Demo label (hidden in presentation mode) */}
-          {result.is_preloaded && (
+          {result.is_preloaded && getWorkspacePreferences().showDemoLabels && (
             <div className="demo-data-label text-center py-1">
               <span className="font-data-label text-[9px] text-outline italic">
                 Demo data — pre-loaded for presentation
