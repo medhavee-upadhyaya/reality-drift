@@ -97,16 +97,18 @@ async def fetch_sec_filing_text(serp_results: list[dict]) -> str:
             f"http://brd-customer-{CUSTOMER_ID}-zone-web_unlocker1:"
             f"{WEB_UNLOCKER_PASSWORD}@brd.superproxy.io:22225"
         )
-        async with httpx.AsyncClient(verify=False) as client:
+        async with httpx.AsyncClient(
+            verify=False,
+            proxy=unlocker_proxy,
+            timeout=45.0,
+            follow_redirects=True,
+        ) as client:
             response = await client.get(
                 sec_url,
-                proxy=unlocker_proxy,
                 headers={
                     "User-Agent": "Mozilla/5.0 (compatible; research/1.0)",
                     "x-brd-render": "false",  # SEC filings are plain HTML/text, no JS needed
                 },
-                timeout=45.0,
-                follow_redirects=True,
             )
         text = response.text
         print(f"✅ Web Unlocker: fetched SEC filing ({len(text)} chars)")

@@ -41,9 +41,13 @@ app = FastAPI(
 # Explicit origins from env var (comma-separated)
 allowed_origins_raw = os.getenv(
     "ALLOWED_ORIGINS",
-    "http://localhost:3000,http://localhost:3001"
+    "http://localhost:3000,http://localhost:3001,"
+    "http://127.0.0.1:3000,http://127.0.0.1:3001"
 )
 allowed_origins = [o.strip() for o in allowed_origins_raw.split(",") if o.strip()]
+for local_origin in ("http://127.0.0.1:3000", "http://127.0.0.1:3001"):
+    if local_origin not in allowed_origins:
+        allowed_origins.append(local_origin)
 
 # Regex covers any Vercel preview/production subdomain automatically
 # e.g. reality-drift-rho.vercel.app, reality-drift.vercel.app, etc.

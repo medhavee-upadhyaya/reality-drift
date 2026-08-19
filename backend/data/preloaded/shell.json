@@ -7,7 +7,7 @@
   "rdi_score": 84,
   "rdi_components": {
     "geographic_drift": { "score": 79, "weight": 0.30, "weighted": 23.7 },
-    "claim_evidence":   { "score": 91, "weight": 0.35, "weighted": 31.85 },
+    "claim_evidence":   { "score": 94, "weight": 0.35, "weighted": 32.9 },
     "temporal_drift":   { "score": 62, "weight": 0.20, "weighted": 12.4 },
     "disclosure_gap":   { "score": 100, "weight": 0.15, "weighted": 15.0 }
   },

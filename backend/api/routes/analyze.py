@@ -120,6 +120,19 @@ async def _run_full_pipeline(
         print(f"⚠️  Geo fetch partial failure: {e}")
     await _progress(AnalysisStep.GEO_FETCH, 20, f"Retrieved {len(regional_html)} regional pages")
 
+    # Convert and validate the core evidence before spending time on secondary
+    # sources. A geographic comparison needs at least two usable pages.
+    regional_text = {
+        region: extract_text_from_html(data["html"])
+        for region, data in regional_html.items()
+        if isinstance(data, dict) and data.get("html")
+    }
+    if len(regional_text) < 2:
+        raise RuntimeError(
+            "Insufficient source data: fewer than two regional pages were "
+            "retrieved. Check the target URL and Bright Data credentials."
+        )
+
     # ── Layer 2: SEC EDGAR (Bright Data SERP API + Web Unlocker) ─────────────
     await _progress(AnalysisStep.SEC_SCRAPE, 25, "Searching SEC EDGAR for regulatory filings...")
     try:
@@ -151,13 +164,6 @@ async def _run_full_pipeline(
     # ── Layer 5: Claude AI Analysis (with prompt caching) ─────────────────────
     await _progress(AnalysisStep.CLAUDE_ANALYZE, 55, "Extracting claims from regional pages...")
 
-    # Convert HTML to clean text for each region
-    regional_text = {
-        region: extract_text_from_html(data["html"])
-        for region, data in regional_html.items()
-        if isinstance(data, dict) and data.get("html")
-    }
-
     # GraphRAG: retrieve relevant institutional memory before current reasoning.
     historical_context = ""
     prior_history = []
@@ -181,6 +187,12 @@ async def _run_full_pipeline(
 
     # 5a. Extract claims per region
     claims_result = await extract_claims(regional_text, company_name)
+    total_extracted_claims = sum(len(claims) for claims in claims_result.values())
+    if total_extracted_claims == 0:
+        raise RuntimeError(
+            "AI analysis produced no verifiable claims. Check the Anthropic "
+            "API key or choose a page containing substantive ESG claims."
+        )
     await _progress(AnalysisStep.CLAUDE_ANALYZE, 60, "Comparing regional narratives semantically...")
 
     # Measure the content itself instead of inferring drift from fetch count.
@@ -246,13 +258,13 @@ async def _run_full_pipeline(
     # Geographic similarity is computed from pairwise narrative content.
     regions_fetched = len(regional_text)
 
-    total_claims = sum(len(c) for c in claims_result.values())
+    total_claims = total_extracted_claims
     history_for_scoring = [point.model_dump() for point in prior_history]
 
     rdi_data = await compute_rdi(
         regional_similarity=regional_similarity,
         contradictions=contradictions_result,
-        total_claims=max(total_claims, 1),
+        total_claims=total_claims,
         sec_filing=sec_comparison,
         cognee_history=history_for_scoring,
     )
@@ -418,10 +430,28 @@ async def analyze_stream(url: str, company_name: str, force_live: bool = False, 
             except Exception:
                 pass
 
-        # Run pipeline in background
-        pipeline_task = asyncio.create_task(
-            _run_full_pipeline(url, company_name, analysis_id, on_progress, regional_urls=parsed_regional_urls)
-        )
+        # Run the pipeline in the background and route failures through the
+        # same event queue. Otherwise the stream waits for its 120-second
+        # timeout even when the pipeline has already failed.
+        async def run_pipeline():
+            try:
+                return await _run_full_pipeline(
+                    url,
+                    company_name,
+                    analysis_id,
+                    on_progress,
+                    regional_urls=parsed_regional_urls,
+                )
+            except Exception as exc:
+                await progress_events.put(ProgressEvent(
+                    step=AnalysisStep.ERROR,
+                    progress=0,
+                    message="Analysis could not produce a trustworthy result",
+                    error=str(exc),
+                ))
+                raise
+
+        pipeline_task = asyncio.create_task(run_pipeline())
 
         # Stream events as they arrive
         while True:
@@ -435,6 +465,15 @@ async def analyze_stream(url: str, company_name: str, force_live: bool = False, 
                         message="Analysis complete", result=result
                     )
                     yield {"data": final.model_dump_json()}
+                    break
+                if evt.step == AnalysisStep.ERROR:
+                    yield {"data": evt.model_dump_json()}
+                    # Retrieve the exception so asyncio does not report an
+                    # unhandled background task failure.
+                    try:
+                        await pipeline_task
+                    except Exception:
+                        pass
                     break
                 yield {"data": evt.model_dump_json()}
             except asyncio.TimeoutError:

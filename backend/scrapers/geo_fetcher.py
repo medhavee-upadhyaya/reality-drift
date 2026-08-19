@@ -104,10 +104,21 @@ async def _fetch_url(
             "timeout": 30.0,
             "follow_redirects": True,
         }
+        # httpx 0.28 moved proxy configuration from request methods to the
+        # client constructor.  Each region has a different proxy, so create a
+        # short-lived client only for proxied requests and keep the shared
+        # client for direct requests.
         if proxy_url and has_proxy_creds:
-            kwargs["proxy"] = proxy_url
-
-        response = await client.get(url, **kwargs)
+            async with httpx.AsyncClient(
+                proxy=proxy_url,
+                verify=False,
+                timeout=30.0,
+                follow_redirects=True,
+            ) as proxy_client:
+                response = await proxy_client.get(url, headers=HEADERS)
+        else:
+            response = await client.get(url, **kwargs)
+        response.raise_for_status()
         html = response.text
         return {
             "region": region,
@@ -145,6 +156,7 @@ async def _fetch_via_web_unlocker(url: str, region: str) -> Optional[dict]:
                     "country": region.lower(),
                 },
             )
+        response.raise_for_status()
         html = response.text
         return {
             "region": region,

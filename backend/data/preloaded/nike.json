@@ -6,8 +6,8 @@
   "is_preloaded": true,
   "rdi_score": 71,
   "rdi_components": {
-    "geographic_drift": { "score": 68, "weight": 0.30, "weighted": 20.4 },
-    "claim_evidence":   { "score": 84, "weight": 0.35, "weighted": 29.4 },
+    "geographic_drift": { "score": 67, "weight": 0.30, "weighted": 20.1 },
+    "claim_evidence":   { "score": 83, "weight": 0.35, "weighted": 29.05 },
     "temporal_drift":   { "score": 44, "weight": 0.20, "weighted": 8.8 },
     "disclosure_gap":   { "score": 87, "weight": 0.15, "weighted": 13.05 }
   },
