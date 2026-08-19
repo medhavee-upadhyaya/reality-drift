@@ -132,15 +132,24 @@ export default function AnalyzePage() {
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center space-y-4">
             <span className="material-symbols-outlined text-[64px] text-tertiary">warning</span>
-            <div className="font-headline-md text-headline-md text-on-surface font-bold">Analysis Failed</div>
+            <div className="font-headline-md text-headline-md text-on-surface font-bold">Analysis Could Not Be Verified</div>
             <div className="font-data-value text-data-value text-outline max-w-sm">{error}</div>
-            <button
-              onClick={() => router.push("/")}
-              className="mt-4 px-6 py-3 glass-panel rounded-xl font-data-label text-data-label uppercase text-primary hover:bg-primary/10 transition-all flex items-center gap-xs mx-auto"
-            >
-              <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-              Back to Command Center
-            </button>
+            <div className="flex flex-wrap justify-center gap-sm pt-2">
+              <button
+                onClick={() => loadAnalysis()}
+                className="px-6 py-3 bg-primary text-on-primary rounded-xl font-data-label text-data-label uppercase hover:bg-primary-fixed transition-all flex items-center gap-xs"
+              >
+                <span className="material-symbols-outlined text-[16px]">refresh</span>
+                Retry Analysis
+              </button>
+              <button
+                onClick={() => router.push("/")}
+                className="px-6 py-3 glass-panel rounded-xl font-data-label text-data-label uppercase text-primary hover:bg-primary/10 transition-all flex items-center gap-xs"
+              >
+                <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+                Back to Command Center
+              </button>
+            </div>
           </div>
         </div>
         <StatusBar />

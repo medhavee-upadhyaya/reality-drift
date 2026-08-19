@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { DEMO_COMPANIES } from "@/lib/preloaded";
+import { DEMO_COMPANIES, getPreloadedSlug } from "@/lib/preloaded";
 import { AppMode } from "@/lib/types";
 import Navbar from "@/components/Navbar";
 import StatusBar from "@/components/StatusBar";
@@ -15,6 +15,7 @@ export default function LandingPage() {
   const [input, setInput] = useState("");
   const [regionalDomains, setRegionalDomains] = useState("");
   const [mode, setMode] = useState<AppMode>("outsider");
+  const [inputError, setInputError] = useState("");
 
   useEffect(() => {
     setMode(getWorkspacePreferences().defaultMode);
@@ -22,10 +23,18 @@ export default function LandingPage() {
 
   const handleAnalyze = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    const value = input.trim();
+    if (!value) return;
+    const isDemo = Boolean(getPreloadedSlug(value));
+    const looksLikeWebsite = /^(https?:\/\/)?(?:[^\s.]+\.)+[^\s.]{2,}(?:\/\S*)?$/i.test(value);
+    if (!isDemo && !looksLikeWebsite) {
+      setInputError("For a live analysis, enter a complete company domain such as patagonia.com.");
+      return;
+    }
+    setInputError("");
     const dest = mode === "compliance"
-      ? `/compliance/${encodeURIComponent(input.trim())}`
-      : `/analyze/${encodeURIComponent(input.trim())}`;
+      ? `/compliance/${encodeURIComponent(value)}`
+      : `/analyze/${encodeURIComponent(value)}`;
     if (mode === "compliance" && regionalDomains.trim()) {
       const values = regionalDomains.split(",").map((value) => value.trim()).filter(Boolean);
       const regionCodes = ["DE", "IN", "BR", "SG"];
@@ -194,11 +203,11 @@ export default function LandingPage() {
               <input
                 type="text"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => { setInput(e.target.value); setInputError(""); }}
                 placeholder={
                   mode === "compliance"
                     ? "Enter your company's primary domain..."
-                    : "Enter company URL or name to analyze drift..."
+                    : "Enter a company website, or try Shell, Nike, or H&M..."
                 }
                 className="flex-1 bg-transparent border-none text-on-surface placeholder:text-outline focus:ring-0 focus:outline-none font-data-value text-[16px] py-4"
               />
@@ -213,6 +222,11 @@ export default function LandingPage() {
                 </span>
               </button>
             </div>
+            {inputError && (
+              <div role="alert" className="px-sm text-tertiary font-data-label text-[11px]">
+                {inputError}
+              </div>
+            )}
 
             {/* Compliance-only: regional domains input */}
             <AnimatePresence>
